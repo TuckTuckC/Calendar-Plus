@@ -1,0 +1,46 @@
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+    padding: 10px;
+    width: 50%;
+    align-items: center;
+  }
+  
+  .month-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .calendar-day {
+    height: 100px;
+    padding: 5px;
+    background: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+  }
+  
+  .calendar-task {
+    background: #dff7ff;
+    padding: 5px;
+    border-radius: 4px;
+  }
+  
+  .calendar-day p {
+    margin: 0;
+  }
+  
+  .empty-day {
+    visibility: hidden; /* Hide non-existent days */
+  }
+  
