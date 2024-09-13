@@ -1,52 +1,71 @@
-.todo-list-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  
-  .todo-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    margin-bottom: 10px;
-  }
-  
-  .todo-item {
-    background: #dff7ff;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    transition: background 0.2s ease;
-  }
-  
-  .todo-item:hover {
-    background: #b3e7ff;
-  }
-  
-  .todo-input-form {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #f4f4f4;
+/* TodoList.css */
+.todo-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
   }
   
   .todo-input {
-    flex-grow: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    margin-right: 10px;
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
   }
   
-  .todo-submit-btn {
-    padding: 8px 12px;
+  .todo-input input[type="text"],
+  .todo-input input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1;
+  }
+  
+  .todo-input button {
+    padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
   
-  .todo-submit-btn:hover {
+  .todo-input button:hover {
     background-color: #0056b3;
   }
   
+  .todo-list {
+    margin-top: 20px;
+  }
+  
+  .todo-category {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .todo-category h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .todo-item {
+    background-color: #f0f8ff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+  }
+  
+  .todo-item:hover {
+    background-color: #d1ecff;
+  }
+  
+  .all-day-task {
+    background-color: #ffc1c1; /* Different color for all-day tasks */
+    margin-top: 10px;
+    padding: 10px;
+  }

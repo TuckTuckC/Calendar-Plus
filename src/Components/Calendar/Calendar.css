@@ -1,46 +1,53 @@
-.calendar-container {
+/* Calendar.css */
+.calendar {
     display: flex;
     flex-direction: column;
-    overflow-x: scroll;
-    padding: 10px;
-    width: 50%;
-    align-items: center;
+    padding: 20px;
+    background-color: #fff;
   }
   
-  .month-container {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .calendar {
+  .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
+    gap: 10px;
   }
   
   .calendar-day {
-    height: 100px;
-    padding: 5px;
-    background: #f4f4f4;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 8px;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-between;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+  
+  .calendar-day:hover {
+    background-color: #ececec;
+  }
+  
+  .day-number {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .task-item {
+    background-color: #dff7ff;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 14px;
     border: 1px solid #ddd;
   }
   
-  .calendar-task {
-    background: #dff7ff;
-    padding: 5px;
-    border-radius: 4px;
-  }
-  
-  .calendar-day p {
-    margin: 0;
-  }
-  
-  .empty-day {
-    visibility: hidden; /* Hide non-existent days */
+  .calendar-month {
+    margin-top: 30px;
   }
   

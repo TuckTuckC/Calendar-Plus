@@ -1,39 +1,32 @@
 /* App.css */
 .app-container {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
   height: 100vh;
 }
 
-.calendar {
-  width: 70%;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-}
-
-.calendar-day {
-  background: #f4f4f4;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  position: relative;
-}
-
-.todo-list {
+.todo-container {
   width: 30%;
   padding: 20px;
-  background: #fff;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.todo-item, .calendar-task {
-  background: #dff7ff;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  transition: background 0.2s ease;
+.calendar {
+  width: 65%;
 }
 
-.todo-item:hover, .calendar-task:hover {
-  background: #b3e7ff;
+@media screen and (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .todo-container,
+  .calendar {
+    width: 100%;
+    padding: 10px;
+  }
 }
