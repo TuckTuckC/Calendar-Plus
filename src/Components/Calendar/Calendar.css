@@ -1,4 +1,9 @@
 /* Calendar.css */
+.calendar-container {
+    align-items: center;
+    justify-content: center;
+}
+
 .calendar {
     display: flex;
     flex-direction: column;
@@ -49,5 +54,6 @@
   
   .calendar-month {
     margin-top: 30px;
+    width: 100%;
   }
   

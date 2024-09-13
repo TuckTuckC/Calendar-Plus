@@ -3,20 +3,27 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 .todo-container {
-  width: 30%;
+  width: 40%;
   padding: 20px;
   background-color: #fff;
   border-radius: 10px;
+  box-sizing:border-box;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+  height: 100vh;
 }
 
-.calendar {
-  width: 65%;
+.calendar-container {
+  width: 60%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  height: 100vh;
 }
 
 @media screen and (max-width: 768px) {
