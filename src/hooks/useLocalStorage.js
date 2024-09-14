@@ -1,11 +1,17 @@
-// hooks/useLocalStorage.js
 import { useState, useEffect } from 'react';
 
 export const useLocalStorage = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      
+      // Parse the stored JSON and convert 'dueDate' back to a Date object if needed
+      return item 
+        ? JSON.parse(item).map(task => ({
+            ...task,
+            dueDate: task.dueDate ? new Date(task.dueDate) : null, // Convert dueDate back to Date object
+          }))
+        : initialValue;
     } catch (error) {
       console.error(error);
       return initialValue;

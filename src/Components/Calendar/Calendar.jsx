@@ -6,47 +6,63 @@ const Calendar = ({ calendarTasks, todoList }) => {
   const [monthOffsets, setMonthOffsets] = useState(
     Array.from({ length: 21 }, (_, i) => i - 10)
   ); // Start with 10 months before and 10 after
-  const currentMonthIndex = 10; // The index of the current month in the array
 
   const calendarRef = useRef(null);
 
+  // Get the correct current month and year using Date()
+  const currentDate = new Date(); // Get the current date from the system
+  const currentMonth = currentDate.getMonth(); // Current month (0 = January, 11 = December)
+  const currentYear = currentDate.getFullYear(); // Current year
+  const currentMonthOffset = 0; // Current month will have offset 0 in this calculation
+
   const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
-  // Auto-scroll to the current month when the component mounts
+  // Set the scrollTop directly when the component mounts to position the scroll at the current month
   useEffect(() => {
-    if (calendarRef.current) {
-      const currentMonthElement = document.getElementById(`month-${currentMonthIndex}`);
-      if (currentMonthElement) {
-        currentMonthElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+    const currentMonthElement = document.querySelector('.current-month');
+    if (currentMonthElement && calendarRef.current) {
+      // Calculate the position of the current month and set it as the scrollTop value
+      const calendarContainer = calendarRef.current;
+      const offsetTop = currentMonthElement.offsetTop;
+      calendarContainer.scrollTop = offsetTop; // Set the scrollTop to directly position at the current month
     }
   }, []);
+
+  // Smooth scroll back to the current month when the button is clicked
+  const scrollToCurrentMonth = () => {
+    const currentMonthElement = document.querySelector('.current-month');
+    if (currentMonthElement) {
+      currentMonthElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Smooth scroll
+    }
+  };
 
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
 
-    // When scrolling near the top, load more months above
+    // Dynamically load months when scrolling to top or bottom
     if (scrollTop < 100) {
-      setMonthOffsets((prevOffsets) => [
-        ...Array.from({ length: 10 }, (_, i) => prevOffsets[0] - (10 - i)),
-        ...prevOffsets,
-      ]);
+      setMonthOffsets((prevOffsets) => {
+        const newOffsets = [
+          ...Array.from({ length: 5 }, (_, i) => prevOffsets[0] - (5 - i)),
+          ...prevOffsets,
+        ];
+        return newOffsets;
+      });
     }
 
-    // When scrolling near the bottom, load more months below
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-      setMonthOffsets((prevOffsets) => [
-        ...prevOffsets,
-        ...Array.from({ length: 10 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
-      ]);
+      setMonthOffsets((prevOffsets) => {
+        const newOffsets = [
+          ...prevOffsets,
+          ...Array.from({ length: 5 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
+        ];
+        return newOffsets;
+      });
     }
   };
 
   const renderDays = (monthOffset) => {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-
+    // Calculate month and year dynamically
     const month = (currentMonth + monthOffset) % 12;
     const year = currentYear + Math.floor((currentMonth + monthOffset) / 12);
     const daysInMonth = getDaysInMonth(month, year);
@@ -91,12 +107,27 @@ const Calendar = ({ calendarTasks, todoList }) => {
 
   return (
     <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
-      {monthOffsets.map((offset, index) => (
-        <div key={index} id={`month-${index}`} className="calendar-month">
-          <h3>{new Date(new Date().setMonth(new Date().getMonth() + offset)).toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
-          <div className="calendar-grid">{renderDays(offset)}</div>
-        </div>
-      ))}
+      <button className="scroll-button" onClick={scrollToCurrentMonth}>
+        Back to Current Month
+      </button>
+      {monthOffsets.map((offset, index) => {
+        const isCurrentMonth = offset === currentMonthOffset;
+        return (
+          <div
+            key={index}
+            id={`month-${index}`}
+            className={`calendar-month ${isCurrentMonth ? 'current-month' : ''}`} // Add 'current-month' class
+          >
+            <h3>
+              {new Date(new Date().setMonth(new Date().getMonth() + offset)).toLocaleString(
+                'default',
+                { month: 'long', year: 'numeric' }
+              )}
+            </h3>
+            <div className="calendar-grid">{renderDays(offset)}</div>
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -8,95 +8,125 @@ const TodoList = ({ todoList, setTodoList }) => {
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
 
-  // handleAddTodo is called when the "Add" button is clicked. It adds a new task to the todoList. Verifies that there is a due date and a description
+  // handleAddTodo is called when the "Add" button is clicked. It adds a new task to the todoList.
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
-      let dueDateTime = new Date(`${dueDate}T${dueTime || '00:00:00'}`);
-      
+      let dueDateTime;
+      console.log("DueDate:", dueDate)
+      console.log("DueTime:", dueTime)
+      const [dueYear, dueMonth, dueDay] = dueDate.split('-').map(Number);
+      const [dueHour, dueMinute] = dueTime ? dueTime.split(':').map(Number) : 0;
+
+
+      if (dueTime) {
+        // If there is a time, include it in the dueDateTime
+        // new Date(2024, 8, 22, 8, 25,)
+        dueDateTime = new Date(dueYear, dueMonth - 1, dueDay, dueHour, dueMinute);
+        console.log('dueDateTime', dueDateTime);
+
+      } else {
+        // If there's no dueTime (i.e. it's an all-day event), set the time to '00:00:00'
+        dueDateTime = new Date(dueYear, dueMonth - 1, dueDay);
+      }
+
+      // Ensure the dueDate is valid before adding it
+      if (isNaN(dueDateTime.getTime())) {
+        console.error('Invalid date:', dueDateTime);
+        return; // Don't add the task if the date is invalid
+      }
+
       // Creating the new task object with the inputs
-      const newTask = { task: inputValue, dueDate: dueDateTime, time: dueTime || null };
-      
+      const newTask = {
+        task: inputValue,
+        index: todoList.length,
+        dueDate: dueDateTime, // Store valid Date object
+      };
+
       // Adding the new task to the todoList and resetting the input fields
       setTodoList([...todoList, newTask]);
-      // Cleasring Fields
       setInputValue('');
       setDueDate('');
       setDueTime('');
     }
   };
 
-  // This block groups tasks by their due date.
+  // Group tasks by their due date.
   const groupedTasks = {};
-  // Loop through all tasks in the todoList
   todoList.forEach((task) => {
-    // Convert each task's due date to a string formatted as 'YYYY-MM-DD' (the ISO format)
-    const dateKey = task.dueDate.toISOString().split('T')[0]; // Get the date part only
-    
+    const dueDate = task.dueDate instanceof Date ? task.dueDate : new Date(task.dueDate);
+
+    // Extract year, month, and day using Date methods
+    const year = dueDate.getFullYear();
+    const month = String(dueDate.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based, so we add 1
+    const day = String(dueDate.getDate()).padStart(2, '0');
+
+    // Construct the dateKey in 'YYYY-MM-DD' format
+    const dateKey = `${year}-${month}-${day}`;
+
+    console.log(dateKey, year, month, day); // Log the dateKey
+
     // If there are no tasks for this date yet, create an empty array for that date
     if (!groupedTasks[dateKey]) groupedTasks[dateKey] = [];
-    
+
     // Add the task to the corresponding date array
     groupedTasks[dateKey].push(task);
   });
 
-  // renderTaskGroups dynamically renders tasks for each upcoming day (up to 30 days ahead).
+
+  // Dynamically render tasks for each upcoming day (up to 30 days ahead).
   const renderTaskGroups = () => {
     const daysAhead = 30;
     const today = new Date();
 
-    let days = []; // Array to store the rendered tasks for each day
+    let days = [];
 
-    // Loop through the number of days (today + 30 days ahead)
     for (let i = 0; i <= daysAhead; i++) {
-      const currentDay = new Date(today); // Create a new Date object for each day in the loop
-      currentDay.setDate(today.getDate() + i); // Increment the date by the loop index to go from today up to 30 days ahead
+      const currentDay = new Date(today);
+      currentDay.setDate(today.getDate() + i);
 
-      // Convert the currentDay to an ISO date string (YYYY-MM-DD)
       const dateKey = currentDay.toISOString().split('T')[0];
-
-      // For each day, sort tasks based on their time (all-day tasks come last)
       const sortedTasks = groupedTasks[dateKey]
-        ? groupedTasks[dateKey].sort((a, b) => (a.time && b.time ? a.time.localeCompare(b.time) : a.time ? -1 : 1))
-        : []; // If no tasks for that day, return an empty array
+        ? groupedTasks[dateKey].sort((a, b) => {
+          const aTime = a.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const bTime = b.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          return aTime.localeCompare(bTime);
+        })
+        : [];
 
-      // Logging the droppable ID to ensure proper rendering
-      console.log('Rendering Droppable with ID:', `todo-day-${dateKey}`);
-
-      // Create a Droppable area for each day where tasks can be dragged and dropped
       days.push(
         <Droppable droppableId={`todo-day-${dateKey}`} key={`todo-day-${dateKey}`}>
           {(provided) => (
             <div className="todo-category" ref={provided.innerRef} {...provided.droppableProps}>
-              <h4>{currentDay.toDateString()}</h4> {/* Render the date for the task group */}
-              
-              {/* If there are tasks for the current day, render them */}
+              <h4>{currentDay.toDateString()}</h4>
               {sortedTasks.length > 0 ? (
                 sortedTasks.map((task, index) => (
-                  // Create a Draggable area for each individual task
-                  <Draggable key={task.task} draggableId={task.task} index={index}>
+                  <Draggable key={index} draggableId={String(index)} index={index}>
                     {(provided) => (
                       <div
-                        className={`todo-item ${task.time ? '' : 'all-day-task'}`} // Add a special class if it's an all-day task (no time)
+                        className={`todo-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        {/* Render the task description and time if available */}
-                        {task.task} {task.time ? `@ ${task.time}` : '(All-day)'}
+                        {task.task}{' '}
+                        {task.dueDate.getHours() === 0 && task.dueDate.getMinutes() === 0
+                          ? '(All-day)'
+                          : `: ${task.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                       </div>
                     )}
                   </Draggable>
+
                 ))
               ) : (
-                <p>No tasks for this day</p> // If there are no tasks, show a placeholder message
+                <p>No tasks for this day</p>
               )}
-              {provided.placeholder} {/* Placeholder for the droppable area */}
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
       );
     }
-    return days; // Return the list of task groups for rendering
+    return days;
   };
 
   // The JSX that renders the input form and the list of tasks
