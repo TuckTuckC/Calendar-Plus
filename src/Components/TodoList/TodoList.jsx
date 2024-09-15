@@ -63,7 +63,8 @@ const TodoList = ({ todoList, setTodoList }) => {
     // Construct the dateKey in 'YYYY-MM-DD' format
     const dateKey = `${year}-${month}-${day}`;
 
-    console.log(dateKey, year, month, day); // Log the dateKey
+    console.log('Makeing Sure DateKey Matches:', dateKey, year, month, day); // Log the dateKey
+    console.log('Task Identifier:', String(task.index))
 
     // If there are no tasks for this date yet, create an empty array for that date
     if (!groupedTasks[dateKey]) groupedTasks[dateKey] = [];
