@@ -12,37 +12,28 @@ const TodoList = ({ todoList, setTodoList }) => {
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
       let dueDateTime;
-      console.log("DueDate:", dueDate)
-      console.log("DueTime:", dueTime)
       const [dueYear, dueMonth, dueDay] = dueDate.split('-').map(Number);
-      const [dueHour, dueMinute] = dueTime ? dueTime.split(':').map(Number) : 0;
-
-
+  
       if (dueTime) {
-        // If there is a time, include it in the dueDateTime
-        // new Date(2024, 8, 22, 8, 25,)
+        const [dueHour, dueMinute] = dueTime.split(':').map(Number);
         dueDateTime = new Date(dueYear, dueMonth - 1, dueDay, dueHour, dueMinute);
-        console.log('dueDateTime', dueDateTime);
-
       } else {
-        // If there's no dueTime (i.e. it's an all-day event), set the time to '00:00:00'
         dueDateTime = new Date(dueYear, dueMonth - 1, dueDay);
       }
-
+  
       // Ensure the dueDate is valid before adding it
       if (isNaN(dueDateTime.getTime())) {
         console.error('Invalid date:', dueDateTime);
-        return; // Don't add the task if the date is invalid
+        return;
       }
-
-      // Creating the new task object with the inputs
+  
+      // Creating the new task object with a unique ID
       const newTask = {
+        id: Date.now().toString(), // Use the current timestamp as a unique ID
         task: inputValue,
-        index: todoList.length,
-        dueDate: dueDateTime, // Store valid Date object
+        dueDate: dueDateTime,
       };
-
-      // Adding the new task to the todoList and resetting the input fields
+  
       setTodoList([...todoList, newTask]);
       setInputValue('');
       setDueDate('');
@@ -63,22 +54,14 @@ const TodoList = ({ todoList, setTodoList }) => {
     // Construct the dateKey in 'YYYY-MM-DD' format
     const dateKey = `${year}-${month}-${day}`;
 
-    console.log('Makeing Sure DateKey Matches:', dateKey, year, month, day); // Log the dateKey
-    console.log('Task Identifier:', String(task.index))
-
-    // If there are no tasks for this date yet, create an empty array for that date
     if (!groupedTasks[dateKey]) groupedTasks[dateKey] = [];
-
-    // Add the task to the corresponding date array
     groupedTasks[dateKey].push(task);
   });
-
 
   // Dynamically render tasks for each upcoming day (up to 30 days ahead).
   const renderTaskGroups = () => {
     const daysAhead = 30;
     const today = new Date();
-
     let days = [];
 
     for (let i = 0; i <= daysAhead; i++) {
@@ -101,7 +84,7 @@ const TodoList = ({ todoList, setTodoList }) => {
               <h4>{currentDay.toDateString()}</h4>
               {sortedTasks.length > 0 ? (
                 sortedTasks.map((task, index) => (
-                  <Draggable key={index} draggableId={String(task.index)} index={index}>
+                  <Draggable key={task.id} draggableId={task.id} index={index}>
                     {(provided) => (
                       <div
                         className={`todo-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
@@ -116,7 +99,6 @@ const TodoList = ({ todoList, setTodoList }) => {
                       </div>
                     )}
                   </Draggable>
-
                 ))
               ) : (
                 <p>No tasks for this day</p>
@@ -130,35 +112,27 @@ const TodoList = ({ todoList, setTodoList }) => {
     return days;
   };
 
-  // The JSX that renders the input form and the list of tasks
   return (
     <div className="todo-container">
-      {/* Input form to add a new task */}
       <div className="todo-input">
-        {/* Input for the task description */}
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Add a new task"
         />
-        {/* Input for the due date */}
         <input
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
         />
-        {/* Input for the optional due time */}
         <input
           type="time"
           value={dueTime}
           onChange={(e) => setDueTime(e.target.value)}
         />
-        {/* Button to trigger the handleAddTodo function */}
         <button onClick={handleAddTodo}>Add</button>
       </div>
-
-      {/* Render the list of tasks, grouped by date */}
       <div className="todo-list">{renderTaskGroups()}</div>
     </div>
   );

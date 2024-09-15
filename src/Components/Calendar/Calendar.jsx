@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from 'react-beautiful-dnd'; // Import Draggable
 import './Calendar.css';
 
 const Calendar = ({ calendarTasks, todoList }) => {
@@ -9,37 +9,32 @@ const Calendar = ({ calendarTasks, todoList }) => {
 
   const calendarRef = useRef(null);
 
-  // Get the correct current month and year using Date()
-  const currentDate = new Date(); // Get the current date from the system
-  const currentMonth = currentDate.getMonth(); // Current month (0 = January, 11 = December)
-  const currentYear = currentDate.getFullYear(); // Current year
-  const currentMonthOffset = 0; // Current month will have offset 0 in this calculation
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const currentMonthOffset = 0;
 
   const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
-  // Set the scrollTop directly when the component mounts to position the scroll at the current month
   useEffect(() => {
     const currentMonthElement = document.querySelector('.current-month');
     if (currentMonthElement && calendarRef.current) {
-      // Calculate the position of the current month and set it as the scrollTop value
       const calendarContainer = calendarRef.current;
       const offsetTop = currentMonthElement.offsetTop;
-      calendarContainer.scrollTop = offsetTop; // Set the scrollTop to directly position at the current month
+      calendarContainer.scrollTop = offsetTop;
     }
   }, []);
 
-  // Smooth scroll back to the current month when the button is clicked
   const scrollToCurrentMonth = () => {
     const currentMonthElement = document.querySelector('.current-month');
     if (currentMonthElement) {
-      currentMonthElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Smooth scroll
+      currentMonthElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
 
-    // Dynamically load months when scrolling to top or bottom
     if (scrollTop < 100) {
       setMonthOffsets((prevOffsets) => {
         const newOffsets = [
@@ -62,7 +57,6 @@ const Calendar = ({ calendarTasks, todoList }) => {
   };
 
   const renderDays = (monthOffset) => {
-    // Calculate month and year dynamically
     const month = (currentMonth + monthOffset) % 12;
     const year = currentYear + Math.floor((currentMonth + monthOffset) / 12);
     const daysInMonth = getDaysInMonth(month, year);
@@ -87,22 +81,37 @@ const Calendar = ({ calendarTasks, todoList }) => {
               className={`calendar-day ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
               ref={provided.innerRef}
               {...provided.droppableProps}
-              style={{ minWidth: '100px', minHeight: '100px', maxWidth: '150px', maxHeight: '150px' }}  // Set size here
+              style={{ minWidth: '100px', minHeight: '100px', maxWidth: '150px', maxHeight: '150px' }}
             >
               <div className="day-number">{i <= daysInMonth ? i : ''}</div>
               <div className="tasks-container">
-                {sortedTasks.map((task, index) => (
-                  <div key={index} className={`task-item ${task.time ? '' : 'all-day-task'}`}>
-                    {task.task} {task.time ? `@ ${task.time}` : '(All-day)'}
-                  </div>
-                ))}
+                {sortedTasks.length > 0 ? (
+                  sortedTasks.map((task, index) => (
+                    <Draggable key={task.index} draggableId={`calendar-${task.index}`} index={index}>
+                      {(provided) => (
+                        <div
+                          className={`task-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          {task.task} {task.dueDate.getHours() ? `: ${task.dueDate.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true, // 12-hour format
+                          })}` : '(All-day)'}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <p></p>
+                )}
               </div>
               {provided.placeholder}
             </div>
           )}
         </Droppable>
-
-
       );
     }
     return days;
@@ -119,7 +128,7 @@ const Calendar = ({ calendarTasks, todoList }) => {
           <div
             key={index}
             id={`month-${index}`}
-            className={`calendar-month ${isCurrentMonth ? 'current-month' : ''}`} // Add 'current-month' class
+            className={`calendar-month ${isCurrentMonth ? 'current-month' : ''}`}
           >
             <h3>
               {new Date(new Date().setMonth(new Date().getMonth() + offset)).toLocaleString(
