@@ -95,7 +95,7 @@ const TodoList = ({ todoList, setTodoList }) => {
         : [];
 
       days.push(
-        <Droppable droppableId={`todo-day-${dateKey}`} key={`todo-day-${dateKey}`}>
+        <Droppable droppableId={`tododay-${dateKey}`} key={`tododay-${dateKey}`}>
           {(provided) => (
             <div className="todo-category" ref={provided.innerRef} {...provided.droppableProps}>
               <h4>{currentDay.toDateString()}</h4>

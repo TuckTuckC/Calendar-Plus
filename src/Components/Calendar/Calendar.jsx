@@ -82,11 +82,12 @@ const Calendar = ({ calendarTasks, todoList }) => {
 
       days.push(
         <Droppable droppableId={droppableId} key={droppableId}>
-          {(provided) => (
+          {(provided, snapshot) => (
             <div
-              className="calendar-day"
+              className={`calendar-day ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
               ref={provided.innerRef}
               {...provided.droppableProps}
+              style={{ minWidth: '100px', minHeight: '100px', maxWidth: '150px', maxHeight: '150px' }}  // Set size here
             >
               <div className="day-number">{i <= daysInMonth ? i : ''}</div>
               <div className="tasks-container">
@@ -100,6 +101,8 @@ const Calendar = ({ calendarTasks, todoList }) => {
             </div>
           )}
         </Droppable>
+
+
       );
     }
     return days;
