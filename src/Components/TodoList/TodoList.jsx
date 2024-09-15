@@ -100,7 +100,7 @@ const TodoList = ({ todoList, setTodoList }) => {
               <h4>{currentDay.toDateString()}</h4>
               {sortedTasks.length > 0 ? (
                 sortedTasks.map((task, index) => (
-                  <Draggable key={index} draggableId={String(index)} index={index}>
+                  <Draggable key={index} draggableId={String(task.index)} index={index}>
                     {(provided) => (
                       <div
                         className={`todo-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
