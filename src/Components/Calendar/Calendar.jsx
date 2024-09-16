@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd'; // Import Draggable
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './Calendar.css';
 
-const Calendar = ({ calendarTasks, todoList }) => {
-  const [monthOffsets, setMonthOffsets] = useState(
-    Array.from({ length: 21 }, (_, i) => i - 10)
-  ); // Start with 10 months before and 10 after
-
+const Calendar = ({ todoList }) => {
+  const [monthOffsets, setMonthOffsets] = useState(Array.from({ length: 21 }, (_, i) => i - 10));
   const calendarRef = useRef(null);
 
   const currentDate = new Date();
@@ -36,23 +33,17 @@ const Calendar = ({ calendarTasks, todoList }) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
 
     if (scrollTop < 100) {
-      setMonthOffsets((prevOffsets) => {
-        const newOffsets = [
-          ...Array.from({ length: 5 }, (_, i) => prevOffsets[0] - (5 - i)),
-          ...prevOffsets,
-        ];
-        return newOffsets;
-      });
+      setMonthOffsets((prevOffsets) => [
+        ...Array.from({ length: 5 }, (_, i) => prevOffsets[0] - (5 - i)),
+        ...prevOffsets,
+      ]);
     }
 
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-      setMonthOffsets((prevOffsets) => {
-        const newOffsets = [
-          ...prevOffsets,
-          ...Array.from({ length: 5 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
-        ];
-        return newOffsets;
-      });
+      setMonthOffsets((prevOffsets) => [
+        ...prevOffsets,
+        ...Array.from({ length: 5 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
+      ]);
     }
   };
 
@@ -68,11 +59,11 @@ const Calendar = ({ calendarTasks, todoList }) => {
     });
 
     let days = [];
-    for (let i = 1; i <= 31; i++) {
+    for (let i = 1; i <= daysInMonth; i++) {
       const dayTasks = tasksForMonth.filter((task) => task.dueDate.getDate() === i);
-      const sortedTasks = dayTasks.sort((a, b) => (a.time && b.time ? a.time.localeCompare(b.time) : a.time ? -1 : 1));
+      const sortedTasks = dayTasks.sort((a, b) => a.dueDate - b.dueDate);
 
-      const droppableId = `day-${year}-${month + 1}-${i}`;
+      const droppableId = `day-${year}-${month + 1}-${i}`; // Unique droppableId
 
       days.push(
         <Droppable droppableId={droppableId} key={droppableId}>
@@ -87,7 +78,7 @@ const Calendar = ({ calendarTasks, todoList }) => {
               <div className="tasks-container">
                 {sortedTasks.length > 0 ? (
                   sortedTasks.map((task, index) => (
-                    <Draggable key={task.index} draggableId={`calendar-${task.index}`} index={index}>
+                    <Draggable key={task.id} draggableId={`task-${task.id}`} index={index}>
                       {(provided) => (
                         <div
                           className={`task-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
@@ -95,10 +86,11 @@ const Calendar = ({ calendarTasks, todoList }) => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          {task.task} {task.dueDate.getHours() ? `: ${task.dueDate.toLocaleTimeString([], {
+                          {task.task}
+                          {task.dueDate.getHours() ? `: ${task.dueDate.toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',
-                            hour12: true, // 12-hour format
+                            hour12: true,
                           })}` : '(All-day)'}
                         </div>
                       )}

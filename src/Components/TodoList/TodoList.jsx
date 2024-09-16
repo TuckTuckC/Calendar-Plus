@@ -1,39 +1,39 @@
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { v4 as uuidv4 } from 'uuid';
 import './TodoList.css';
 
-// TodoList contains a list of tasks which are set by react state
 const TodoList = ({ todoList, setTodoList }) => {
   const [inputValue, setInputValue] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
 
-  // handleAddTodo is called when the "Add" button is clicked. It adds a new task to the todoList.
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
       let dueDateTime;
       const [dueYear, dueMonth, dueDay] = dueDate.split('-').map(Number);
-  
+
       if (dueTime) {
         const [dueHour, dueMinute] = dueTime.split(':').map(Number);
         dueDateTime = new Date(dueYear, dueMonth - 1, dueDay, dueHour, dueMinute);
       } else {
-        dueDateTime = new Date(dueYear, dueMonth - 1, dueDay);
+        // Create date at midnight (local time) to avoid timezone issues
+        dueDateTime = new Date(dueYear, dueMonth - 1, dueDay, 0, 0, 0);
       }
-  
+
       // Ensure the dueDate is valid before adding it
       if (isNaN(dueDateTime.getTime())) {
         console.error('Invalid date:', dueDateTime);
         return;
       }
-  
-      // Creating the new task object with a unique ID
+
+      // Create a new task object with a unique UUID
       const newTask = {
-        id: Date.now().toString(), // Use the current timestamp as a unique ID
+        id: uuidv4(),
         task: inputValue,
         dueDate: dueDateTime,
       };
-  
+
       setTodoList([...todoList, newTask]);
       setInputValue('');
       setDueDate('');
@@ -41,24 +41,23 @@ const TodoList = ({ todoList, setTodoList }) => {
     }
   };
 
-  // Group tasks by their due date.
+  // Group tasks by their due date
   const groupedTasks = {};
   todoList.forEach((task) => {
-    const dueDate = task.dueDate instanceof Date ? task.dueDate : new Date(task.dueDate);
+    const dueDate = new Date(task.dueDate);
 
-    // Extract year, month, and day using Date methods
-    const year = dueDate.getFullYear();
-    const month = String(dueDate.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based, so we add 1
-    const day = String(dueDate.getDate()).padStart(2, '0');
+    // Ensure dueDate is handled at midnight to avoid timezone issues
+    const adjustedDate = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate(), 0, 0, 0);
 
-    // Construct the dateKey in 'YYYY-MM-DD' format
+    const year = adjustedDate.getFullYear();
+    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(adjustedDate.getDate()).padStart(2, '0');
     const dateKey = `${year}-${month}-${day}`;
 
     if (!groupedTasks[dateKey]) groupedTasks[dateKey] = [];
     groupedTasks[dateKey].push(task);
   });
 
-  // Dynamically render tasks for each upcoming day (up to 30 days ahead).
   const renderTaskGroups = () => {
     const daysAhead = 30;
     const today = new Date();
@@ -68,14 +67,11 @@ const TodoList = ({ todoList, setTodoList }) => {
       const currentDay = new Date(today);
       currentDay.setDate(today.getDate() + i);
 
+      // Ensure currentDay is set to midnight
+      currentDay.setHours(0, 0, 0, 0);
+
       const dateKey = currentDay.toISOString().split('T')[0];
-      const sortedTasks = groupedTasks[dateKey]
-        ? groupedTasks[dateKey].sort((a, b) => {
-          const aTime = a.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const bTime = b.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          return aTime.localeCompare(bTime);
-        })
-        : [];
+      const sortedTasks = groupedTasks[dateKey] || [];
 
       days.push(
         <Droppable droppableId={`tododay-${dateKey}`} key={`tododay-${dateKey}`}>
@@ -92,10 +88,7 @@ const TodoList = ({ todoList, setTodoList }) => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        {task.task}{' '}
-                        {task.dueDate.getHours() === 0 && task.dueDate.getMinutes() === 0
-                          ? '(All-day)'
-                          : `: ${task.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                        {task.task} {task.dueDate.getHours() === 0 ? '(All-day)' : `: ${task.dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                       </div>
                     )}
                   </Draggable>
