@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './Calendar.css';
 
@@ -99,21 +100,21 @@ const Calendar = ({ todoList }) => {
                 ) : (
                   <p></p>
                 )}
+                </div>
+                {provided.placeholder}
               </div>
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      );
-    }
-    return days;
-  };
-
-  return (
-    <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
-      <button className="scroll-button" onClick={scrollToCurrentMonth}>
-        Back to Current Month
-      </button>
+            )}
+          </Droppable>
+        );
+      }
+      return days;
+    };
+  
+    return (
+      <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
+        <button className="scroll-button" onClick={scrollToCurrentMonth}>
+          Back to Current Month
+        </button>
       {monthOffsets.map((offset, index) => {
         const isCurrentMonth = offset === currentMonthOffset;
         return (
