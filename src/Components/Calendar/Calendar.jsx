@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { shouldRenderTaskOnDate } from '../../hooks/controllers';
+import TodoItem from '../TodoItem/TodoItem';
 import './Calendar.css';
 
 const Calendar = ({ todoList }) => {
   const [monthOffsets, setMonthOffsets] = useState(Array.from({ length: 21 }, (_, i) => i - 10));
   const calendarRef = useRef(null);
-
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -49,85 +48,55 @@ const Calendar = ({ todoList }) => {
   };
 
   const renderDays = (monthOffset) => {
-    const month = (currentMonth + monthOffset) % 12;
-    const year = currentYear + Math.floor((currentMonth + monthOffset) / 12);
+    const adjustedDate = new Date(currentYear, currentMonth + monthOffset, 1);
+    const month = adjustedDate.getMonth();
+    const year = adjustedDate.getFullYear();
     const daysInMonth = getDaysInMonth(month, year);
-
-    const tasksForMonth = todoList.filter((task) => {
-      const taskMonth = task.dueDate.getMonth();
-      const taskYear = task.dueDate.getFullYear();
-      return taskMonth === month && taskYear === year;
-    });
+    const firstDayOfWeek = adjustedDate.getDay();
 
     let days = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      const dayTasks = tasksForMonth.filter((task) => task.dueDate.getDate() === i);
-      const sortedTasks = dayTasks.sort((a, b) => a.dueDate - b.dueDate);
 
-      const droppableId = `day-${year}-${month + 1}-${i}`; // Unique droppableId
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push(<div key={`empty-${month}-${i}`} className="calendar-day empty-day" />);
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentDay = new Date(year, month, i);
+      currentDay.setHours(0, 0, 0, 0);
+      const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+
+      const tasksForDay = todoList.filter((task) => shouldRenderTaskOnDate(task, currentDay));
 
       days.push(
-        <Droppable droppableId={droppableId} key={droppableId}>
-          {(provided, snapshot) => (
-            <div
-              className={`calendar-day ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              style={{ minWidth: '100px', minHeight: '100px', maxWidth: '150px', maxHeight: '150px' }}
-            >
-              <div className="day-number">{i <= daysInMonth ? i : ''}</div>
-              <div className="tasks-container">
-                {sortedTasks.length > 0 ? (
-                  sortedTasks.map((task, index) => (
-                    <Draggable key={task.id} draggableId={`task-${task.id}`} index={index}>
-                      {(provided) => (
-                        <div
-                          className={`task-item ${task.dueDate.getHours() === 0 ? 'all-day-task' : ''}`}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          {task.task}
-                          {task.dueDate.getHours() ? `: ${task.dueDate.toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true,
-                          })}` : '(All-day)'}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                ) : (
-                  <p></p>
-                )}
-                </div>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        );
-      }
-      return days;
-    };
-  
-    return (
-      <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
-        <button className="scroll-button" onClick={scrollToCurrentMonth}>
-          Back to Current Month
-        </button>
+        <div key={`day-${year}-${month + 1}-${i}`} className="calendar-day">
+          <div className="day-number">{i}</div>
+          <div className="tasks-container">
+            {tasksForDay.length > 0 ? tasksForDay.map((task, index) => (
+              <TodoItem task={task} key={task.id} />
+            )) : <p></p>}
+          </div>
+        </div>
+      );
+    }
+
+    while (days.length < 35) {
+      days.push(<div key={`empty-${month}-${days.length}`} className="calendar-day empty-day" />);
+    }
+
+    return days;
+  };
+
+  return (
+    <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
+      <button className="scroll-button" onClick={scrollToCurrentMonth}>
+        Back to Current Month
+      </button>
       {monthOffsets.map((offset, index) => {
         const isCurrentMonth = offset === currentMonthOffset;
         return (
-          <div
-            key={index}
-            id={`month-${index}`}
-            className={`calendar-month ${isCurrentMonth ? 'current-month' : ''}`}
-          >
+          <div key={index} id={`month-${index}`} className={`calendar-month ${isCurrentMonth ? 'current-month' : ''}`}>
             <h3>
-              {new Date(new Date().setMonth(new Date().getMonth() + offset)).toLocaleString(
-                'default',
-                { month: 'long', year: 'numeric' }
-              )}
+              {new Date(new Date().setMonth(new Date().getMonth() + offset)).toLocaleString('default', { month: 'long', year: 'numeric' })}
             </h3>
             <div className="calendar-grid">{renderDays(offset)}</div>
           </div>

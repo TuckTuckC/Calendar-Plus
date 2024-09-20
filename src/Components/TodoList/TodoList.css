@@ -1,25 +1,40 @@
-/* TodoList.css */
 .todo-container {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-  }
-  
-  .todo-input {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Sticky input bar */
+.sticky-input {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 20px;
+    z-index: 2;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.todo-input {
     display: flex;
     margin-bottom: 20px;
     gap: 10px;
-  }
-  
-  .todo-input input[type="text"],
-  .todo-input input[type="date"] {
+}
+
+.todo-input input[type="text"],
+.todo-input input[type="date"],
+.todo-input input[type="time"] {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     flex: 1;
-  }
-  
-  .todo-input button {
+}
+
+.todo-input button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -27,45 +42,90 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  .todo-input button:hover {
+}
+
+.todo-input button:hover {
     background-color: #0056b3;
-  }
-  
-  .todo-list {
+}
+
+.todo-list {
     margin-top: 20px;
-  }
-  
-  .todo-category {
+}
+
+.todo-category {
     background-color: #fff;
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin-bottom: 20px;
-  }
-  
-  .todo-category h4 {
+}
+
+.todo-category h4 {
     margin-bottom: 10px;
     font-size: 18px;
     font-weight: bold;
-  }
-  
-  .todo-item {
+}
+
+.todo-item {
     background-color: #f0f8ff;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
     transition: background-color 0.3s ease;
-  }
-  
-  .todo-item:hover {
+}
+
+.todo-item:hover {
     background-color: #d1ecff;
-  }
-  
-  .all-day-task {
-    background-color: #ffc1c1; /* Different color for all-day tasks */
+}
+
+.all-day-task {
+    background-color: #ffc1c1;
+    /* Different color for all-day tasks */
     margin-top: 10px;
     padding: 10px;
-  }
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* View toggle buttons */
+.view-toggle {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.view-toggle button {
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-toggle button:hover {
+    background-color: #5a6268;
+}
+
