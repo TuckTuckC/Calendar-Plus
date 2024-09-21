@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
 import TodoItem from '../TodoItem/TodoItem';
+import Day from './Day';
 import './Calendar.css';
 
-const Calendar = ({ todoList }) => {
+const Calendar = ({ todoList, setModalItem, setModalVisibility }) => {
   const [monthOffsets, setMonthOffsets] = useState(Array.from({ length: 21 }, (_, i) => i - 10));
   const calendarRef = useRef(null);
   const currentDate = new Date();
@@ -68,14 +69,7 @@ const Calendar = ({ todoList }) => {
       const tasksForDay = todoList.filter((task) => shouldRenderTaskOnDate(task, currentDay));
 
       days.push(
-        <div key={`day-${year}-${month + 1}-${i}`} className="calendar-day">
-          <div className="day-number">{i}</div>
-          <div className="tasks-container">
-            {tasksForDay.length > 0 ? tasksForDay.map((task, index) => (
-              <TodoItem task={task} key={task.id} />
-            )) : <p></p>}
-          </div>
-        </div>
+        <Day currentDay={currentDay} tasksForDay={tasksForDay} setModalItem={setModalItem} setModalVisibility={setModalVisibility}/>
       );
     }
 

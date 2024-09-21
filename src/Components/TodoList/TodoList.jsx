@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './TodoList.css';
 import TodoItem from '../TodoItem/TodoItem';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,8 +9,8 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
   const [repeatOption, setRepeatOption] = useState('none');
-  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  const [view, setView] = useState('grouped'); // New state to toggle between views
+  const scrollContainerRef = useRef(null); // Reference to scroll container
+  const [activeView, setActiveView] = useState('grouped'); // Track active view
 
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
@@ -45,7 +45,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   };
 
   const groupedTasks = {};
-  const daysAhead = 30;
+  const daysAhead = 30; // Render 30 days ahead
   const today = new Date();
 
   todoList.forEach((task) => {
@@ -67,7 +67,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
     }
   });
 
-  // View 1: Grouped by day
+  // Grouped view rendering (Render 30 days ahead properly)
   const renderTaskGroups = () => {
     let days = [];
     for (let i = 0; i <= daysAhead; i++) {
@@ -99,7 +99,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
     return days;
   };
 
-  // View 2: List of all upcoming tasks
+  // List of all upcoming tasks
   const renderUpcomingTasks = () => {
     const sortedTasks = [...todoList].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
     return sortedTasks.map((task) => (
@@ -108,6 +108,20 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
         <TodoItem task={task} setModalItem={setModalItem} setModalVisibility={setModalVisibility} />
       </div>
     ));
+  };
+
+  // Function to scroll left or right and update the active view
+  const scrollToView = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.offsetWidth;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+
+      // Update active view
+      setActiveView(direction === 'left' ? 'grouped' : 'list');
+    }
   };
 
   return (
@@ -140,15 +154,30 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
         <button onClick={handleAddTodo}>Add</button>
       </div>
 
-      {/* View toggler */}
-      <div className="view-toggle">
-        <button onClick={() => setView('grouped')}>Grouped View</button>
-        <button onClick={() => setView('list')}>List View</button>
+      {/* View toggler with active view tracking */}
+      <div className={`view-toggle ${activeView === 'list' ? 'active-list' : ''}`}>
+        <button
+          className={`view-button ${activeView === 'grouped' ? 'active' : ''}`}
+          onClick={() => scrollToView('left')}
+        >
+          Grouped View
+        </button>
+        <button
+          className={`view-button ${activeView === 'list' ? 'active' : ''}`}
+          onClick={() => scrollToView('right')}
+        >
+          Task List View
+        </button>
       </div>
 
-      {/* Task list based on selected view */}
-      <div className="todo-list">
-        {view === 'grouped' ? renderTaskGroups() : renderUpcomingTasks()}
+      {/* Scrollable view container */}
+      <div className="scroll-container" ref={scrollContainerRef}>
+        <div className="view-content grouped-view">
+          {renderTaskGroups()}
+        </div>
+        <div className="view-content list-view">
+          {renderUpcomingTasks()}
+        </div>
       </div>
     </div>
   );

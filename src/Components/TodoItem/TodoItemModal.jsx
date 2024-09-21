@@ -13,6 +13,9 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
         return null; // If no task, render nothing
     }
 
+    console.log(taskName);
+    
+
     const handleSave = () => {
         // Ensure the dueDate and dueTime are provided and create a Date object
         let dueDateTime;

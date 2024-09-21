@@ -1,4 +1,5 @@
 import React from 'react';
+import './TodoItem.css';
 
 function TodoItem({ task, setModalVisibility, setModalItem }) {
   const handleClick = () => {
@@ -9,13 +10,13 @@ function TodoItem({ task, setModalVisibility, setModalItem }) {
   };
 
   return (
-    <div className="todo-item" onClick={handleClick}>
-      {task.task}
-      {task.dueDate.getHours() ? `: ${task.dueDate.toLocaleTimeString([], {
+    <div className={`todo-item ${task.dueDate.getHours() ? '' : 'allDay'}`} onClick={handleClick}>
+      {task.dueDate.getHours() ? `${task.dueDate.toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
-      })}` : ''}
+      })}: ` : ''}
+      {task.task}
     </div>
   );
 }

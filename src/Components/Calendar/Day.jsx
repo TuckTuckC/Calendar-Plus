@@ -1,26 +1,19 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
+import TodoItem from '../TodoItem/TodoItem';
 
-const Day = ({ currentDay, tasksForDay, onTaskDrop }) => {
-  const [, drop] = useDrop({
-    accept: 'task',
-    drop: (draggedTask) => {
-      onTaskDrop(draggedTask, currentDay);
-    },
-  });
+const Day = ({ currentDay, tasksForDay, setModalItem, setModalVisibility, onTaskDrop }) => {
 
   return (
-    <div ref={drop} className="calendar-day">
+    <div className="calendar-day">
       <div className="day-number">{currentDay.getDate()}</div>
       <div className="tasks-container">
         {tasksForDay.length > 0 ? (
           tasksForDay.map((task, index) => (
-            <div key={index} className="task">
-              {task.task}
-            </div>
+            <TodoItem task={task} setModalItem={setModalItem} setModalVisibility={setModalVisibility} />
           ))
         ) : (
-          <p>No tasks</p>
+          <p></p>
         )}
       </div>
     </div>

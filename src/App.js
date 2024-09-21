@@ -13,7 +13,11 @@ const App = () => {
 
   return (
     <div className="app-container">
-      <Calendar todoList={todoList} />
+      <Calendar 
+        todoList={todoList} 
+        setModalItem={setModalItem} 
+        setModalVisibility={setModalVisibility}  
+      />
       <TodoList 
         todoList={todoList} 
         setTodoList={setTodoList} 
