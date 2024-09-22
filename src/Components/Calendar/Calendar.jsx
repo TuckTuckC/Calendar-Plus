@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
 import TodoItem from '../TodoItem/TodoItem';
+import { handleScroll } from '../../hooks/controllers';
 import Day from './Day';
 import './Calendar.css';
 
 const Calendar = ({ todoList, setModalItem, setModalVisibility }) => {
-  const [monthOffsets, setMonthOffsets] = useState(Array.from({ length: 21 }, (_, i) => i - 10));
+  const [monthOffsets, setMonthOffsets] = useState(Array.from({ length:  7}, (_, i) => i - 3));
+  const [loading, setLoading] = useState(false); // Track loading state
   const calendarRef = useRef(null);
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
@@ -30,23 +32,42 @@ const Calendar = ({ todoList, setModalItem, setModalVisibility }) => {
     }
   };
 
-  const handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target;
-
-    if (scrollTop < 100) {
-      setMonthOffsets((prevOffsets) => [
-        ...Array.from({ length: 5 }, (_, i) => prevOffsets[0] - (5 - i)),
-        ...prevOffsets,
-      ]);
-    }
-
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-      setMonthOffsets((prevOffsets) => [
-        ...prevOffsets,
-        ...Array.from({ length: 5 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
-      ]);
-    }
-  };
+  // const handleScroll = (e) => {
+  //   const { scrollTop, scrollHeight, clientHeight } = e.target;
+  
+  //   // Load more past months if near the top
+  //   if (scrollTop < 100 && !loading) {
+  //     setLoading(true);
+  
+  //     // Store the current scroll height and top position
+  //     const previousScrollHeight = scrollHeight;
+  
+  //     // Add months to the top
+  //     setMonthOffsets((prevOffsets) => [
+  //       ...Array.from({ length: 2 }, (_, i) => prevOffsets[0] - (5 - i)),
+  //       ...prevOffsets,
+  //     ]);
+  
+  //     // Use setTimeout to wait for the DOM to update, then adjust scroll position
+  //     setTimeout(() => {
+  //       const newScrollHeight = calendarRef.current.scrollHeight;
+  //       calendarRef.current.scrollTop = newScrollHeight - previousScrollHeight + scrollTop;
+  //       setLoading(false); // Reset loading after months are added
+  //     }, 0);
+  //   }
+  
+  //   // Load more future months if near the bottom
+  //   if (scrollTop + clientHeight >= scrollHeight - 100 && !loading) {
+  //     setLoading(true);
+  //     setMonthOffsets((prevOffsets) => [
+  //       ...prevOffsets,
+  //       ...Array.from({ length: 2 }, (_, i) => prevOffsets[prevOffsets.length - 1] + i + 1),
+  //     ]);
+  //     setLoading(false);
+  //   }
+  // };
+  
+  
 
   const renderDays = (monthOffset) => {
     const adjustedDate = new Date(currentYear, currentMonth + monthOffset, 1);
@@ -81,7 +102,7 @@ const Calendar = ({ todoList, setModalItem, setModalVisibility }) => {
   };
 
   return (
-    <div className="calendar-container" onScroll={handleScroll} ref={calendarRef}>
+    <div className="calendar-container" onScroll={(e) => handleScroll(e, loading, setLoading, setMonthOffsets, calendarRef, 5)} ref={calendarRef}>
       <button className="scroll-button" onClick={scrollToCurrentMonth}>
         Back to Current Month
       </button>

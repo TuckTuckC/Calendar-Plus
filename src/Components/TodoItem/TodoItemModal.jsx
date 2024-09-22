@@ -1,60 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { updateTask } from '../../hooks/controllers';
 import './TodoItemModal.css';
 
 function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, setTodoList }) {
     const [showDates, setShowDates] = useState(false);
-    const [taskName, setTaskName] = useState(task?.task || '');
-    const [dueDate, setDueDate] = useState(task?.dueDate ? new Date(task.dueDate).toISOString().substring(0, 10) : '');
-    const [dueTime, setDueTime] = useState(task?.dueDate ? new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
+    const [taskName, setTaskName] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [dueTime, setDueTime] = useState('');
+    const [isVisible, setIsVisible] = useState(false); // Control visibility for animation
 
-    // Check if task exists before trying to render the modal content
-    if (!task) {
-        return null; // If no task, render nothing
+    useEffect(() => {
+        if (task) {
+            // Update the state when the task changes
+            setTaskName(task?.task || '');
+            setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substring(0, 10) : '');
+            setDueTime(task?.dueTime || ''); // Use the dueTime field directly
+        }
+    }, [task]); // Re-run the effect whenever `task` changes
+
+    useEffect(() => {
+        if (modalVisibility) {
+            setIsVisible(true); // When modal becomes visible, start animation
+        } else {
+            // After animation duration, actually hide modal
+            const timeout = setTimeout(() => setIsVisible(false), 500);
+            return () => clearTimeout(timeout);
+        }
+    }, [modalVisibility]);
+
+    if (!task && !isVisible) {
+        return null; // If no task or modal should be hidden, render nothing
     }
 
-    console.log(taskName);
-    
-
     const handleSave = () => {
-        // Ensure the dueDate and dueTime are provided and create a Date object
         let dueDateTime;
-        
-        // If both dueDate and dueTime are provided, create the full Date object
         if (dueDate && dueTime) {
-            dueDateTime = new Date(`${dueDate}T${dueTime}:00`); // Ensure time is in HH:mm:ss format
+            // Use the dueDate and dueTime to construct the full datetime object
+            dueDateTime = new Date(`${dueDate}T${dueTime}:00`);
         } else if (dueDate) {
-            // If only dueDate is provided, set the time to 00:00:00 (midnight)
+            // If no dueTime is provided, use the default time (midnight)
             dueDateTime = new Date(`${dueDate}T00:00:00`);
         } else {
-            // Fallback to the task's existing dueDate if nothing is provided
+            // If no dueDate is provided, keep the original dueDate
             dueDateTime = task.dueDate;
         }
-    
-        // Validate that the created date is valid
+
         if (isNaN(dueDateTime.getTime())) {
             console.error('Invalid date:', dueDateTime);
             return;
         }
-    
-        // Create the updated task object
+
         const updatedTask = {
             ...task,
             task: taskName,
-            dueDate: dueDateTime // Use the parsed dueDateTime
+            dueDate: dueDateTime,
+            dueTime: dueTime ? dueTime : null, // Ensure dueTime is stored, or set to null if empty
         };
 
-        console.log(updatedTask);
-        
-    
-        // Update the todo list using the updateTask function
         const updatedTodoList = updateTask(todoList, updatedTask);
         setTodoList(updatedTodoList);
-    
-        // Close the modal after saving
-        setModalVisibility(false);
+        setModalVisibility(false); // Trigger the close animation
     };
-    
 
     const generateFutureDueDates = (task) => {
         const futureDates = [];
@@ -91,13 +97,15 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
     };
 
     const futureDueDates = generateFutureDueDates(task);
-
     const handleToggleDates = () => {
         setShowDates(prevState => !prevState);
     };
 
     return (
-        <div className="itemModal" style={{ visibility: modalVisibility ? 'visible' : 'hidden' }}>
+        <div
+            className={`itemModal ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
+            style={{ display: isVisible ? 'flex' : 'none' }} // Ensures modal is removed after hide animation
+        >
             <button className='exitBtn' onClick={() => setModalVisibility(false)}>X</button>
             <h2>Edit Task</h2>
 
@@ -105,7 +113,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
             <input
                 type="text"
                 id="taskName"
-                defaultValue={task.task}
+                value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
                 placeholder="Enter task name"
             />
@@ -114,7 +122,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
             <input
                 type="date"
                 id="dueDate"
-                defaultValue={task.dueDate ? new Date(task.dueDate).toISOString().substring(0, 10) : ''}
+                value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
             />
 
@@ -122,24 +130,27 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
             <input
                 type="time"
                 id="dueTime"
-                defaultValue={task.dueDate ? new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
             />
 
-            <div className="dropdown">
-                <button className="dropdown-btn" onClick={handleToggleDates}>
-                    {showDates ? 'Hide Later Dates' : 'Show Later Dates'}
-                </button>
-                {showDates && (
-                    <ul className="dropdown-content">
-                        {futureDueDates.map((date, index) => (
-                            <li key={index}>{new Date(date).toLocaleDateString()}</li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+            {/* Conditionally render the "Later Dates" button if the task repeats */}
+            {task.repeat !== 'none' && (
+                <div className="dropdown">
+                    <button className="dropdown-btn" onClick={handleToggleDates}>
+                        {showDates ? 'Hide Later Dates' : 'Show Later Dates'}
+                    </button>
+                    {showDates && (
+                        <ul className="dropdown-content">
+                            {futureDueDates.map((date, index) => (
+                                <li key={index}>{new Date(date).toLocaleDateString()}</li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            )}
 
-            <button className="save-btn" onClick={() => handleSave()}>Save</button>
+            <button className="save-btn" onClick={handleSave}>Save</button>
         </div>
     );
 }

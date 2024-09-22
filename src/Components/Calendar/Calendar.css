@@ -1,7 +1,13 @@
-/* Calendar.css */
 .calendar-container {
   align-items: center;
   justify-content: center;
+  overflow-y: scroll; /* Ensure scrolling is enabled */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.calendar-container::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, and Opera */
 }
 
 .calendar {
@@ -13,8 +19,7 @@
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  /* 7 days in a week */
+  grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
   gap: 10px;
 }
 
@@ -30,7 +35,6 @@
   text-align: center;
   transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
 }
-
 
 /* Hover effect */
 .calendar-day:hover {
@@ -63,7 +67,6 @@
   font-size: 14px;
   border: 1px solid #ddd;
 }
-
 
 .calendar-month {
   margin-top: 30px;

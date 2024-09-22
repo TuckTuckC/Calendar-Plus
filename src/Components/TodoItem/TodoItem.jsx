@@ -1,7 +1,11 @@
 import React from 'react';
 import './TodoItem.css';
 
-function TodoItem({ task, setModalVisibility, setModalItem }) {
+function TodoItem({ view, task, setModalVisibility, setModalItem }) {
+
+  let repeat = view=='list' ? task.repeat: ''
+  repeat = repeat=='none' ? '' : repeat
+
   const handleClick = () => {
     setModalItem(task);
     setModalVisibility(true);
@@ -16,7 +20,7 @@ function TodoItem({ task, setModalVisibility, setModalItem }) {
         minute: '2-digit',
         hour12: true,
       })}: ` : ''}
-      {task.task}
+      {task.task} {repeat!='' ? `(${repeat})` : ''}
     </div>
   );
 }

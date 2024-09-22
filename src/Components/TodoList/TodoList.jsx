@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './TodoList.css';
 import TodoItem from '../TodoItem/TodoItem';
 import { v4 as uuidv4 } from 'uuid';
+import { handleScrollTodoList } from '../../hooks/controllers';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
 
 const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) => {
@@ -11,6 +12,8 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const [repeatOption, setRepeatOption] = useState('none');
   const scrollContainerRef = useRef(null); // Reference to scroll container
   const [activeView, setActiveView] = useState('grouped'); // Track active view
+  const [loading, setLoading] = useState(false);
+  const [daysOffset, setDaysOffset] = useState({ past: 15, future: 30 });
 
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
@@ -33,6 +36,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
         id: uuidv4(),
         task: inputValue,
         dueDate: dueDateTime,
+        dueTime: dueTime,
         repeat: repeatOption,
       };
 
@@ -68,36 +72,43 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   });
 
   // Grouped view rendering (Render 30 days ahead properly)
-  const renderTaskGroups = () => {
-    let days = [];
-    for (let i = 0; i <= daysAhead; i++) {
-      const currentDay = new Date(today);
-      currentDay.setDate(today.getDate() + i);
-      currentDay.setHours(0, 0, 0, 0);
+// Grouped view rendering (Respond to dynamic daysOffset)
+const renderTaskGroups = () => {
+  let days = [];
+  const startDay = new Date(today);
+  startDay.setDate(today.getDate() - daysOffset.past); // Start days 15 before today
 
-      const dateKey = currentDay.toISOString().split('T')[0];
-      const sortedTasks = groupedTasks[dateKey] || [];
+  // Render the range based on daysOffset
+  for (let i = -daysOffset.past; i <= daysOffset.future; i++) {
+    const currentDay = new Date(startDay);
+    currentDay.setDate(startDay.getDate() + i);
+    currentDay.setHours(0, 0, 0, 0);
 
-      days.push(
-        <div className="todo-category" key={`tododay-${dateKey}`}>
-          <h4>{currentDay.toDateString()}</h4>
-          {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => (
-              <TodoItem
-                task={task}
-                key={`todo-${task.id}`}
-                setModalItem={setModalItem}
-                setModalVisibility={setModalVisibility}
-              />
-            ))
-          ) : (
-            <p>No tasks for this day</p>
-          )}
-        </div>
-      );
-    }
-    return days;
-  };
+    const dateKey = currentDay.toISOString().split('T')[0];
+    const sortedTasks = groupedTasks[dateKey] || [];
+
+    days.push(
+      <div className="todo-category" key={`tododay-${dateKey}`}>
+        <h4>{currentDay.toDateString()}</h4>
+        {sortedTasks.length > 0 ? (
+          sortedTasks.map((task) => (
+            <TodoItem
+              task={task}
+              view={'day'}
+              key={`todo-${task.id}`}
+              setModalItem={setModalItem}
+              setModalVisibility={setModalVisibility}
+            />
+          ))
+        ) : (
+          <p>No tasks for this day</p>
+        )}
+      </div>
+    );
+  }
+  return days;
+};
+
 
   // List of all upcoming tasks
   const renderUpcomingTasks = () => {
@@ -105,7 +116,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
     return sortedTasks.map((task) => (
       <div key={task.id} className="todo-category">
         <h4>{new Date(task.dueDate).toDateString()}</h4>
-        <TodoItem task={task} setModalItem={setModalItem} setModalVisibility={setModalVisibility} />
+        <TodoItem view={'list'} task={task} setModalItem={setModalItem} setModalVisibility={setModalVisibility} />
       </div>
     ));
   };
@@ -123,6 +134,16 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
       setActiveView(direction === 'left' ? 'grouped' : 'list');
     }
   };
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const todayElement = document.querySelector('.today');
+      if (todayElement) {
+        scrollContainerRef.current.scrollTop = todayElement.offsetTop;
+      }
+    }
+  }, []);
+  
 
   return (
     <div className="todo-container">
@@ -172,7 +193,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
 
       {/* Scrollable view container */}
       <div className="scroll-container" ref={scrollContainerRef}>
-        <div className="view-content grouped-view">
+        <div className="view-content grouped-view" onScroll={(e) => handleScrollTodoList(e, loading, setLoading, setDaysOffset, scrollContainerRef, 15)}>
           {renderTaskGroups()}
         </div>
         <div className="view-content list-view">
