@@ -164,5 +164,7 @@
 
 /* Additional styles to make sure the buttons still look clickable */
 .view-toggle button:hover {
-    color: #fff;
+    /* filter: brightness(1.2) saturate(1.5); */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
