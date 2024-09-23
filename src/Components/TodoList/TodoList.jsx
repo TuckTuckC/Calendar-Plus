@@ -87,8 +87,10 @@ const renderTaskGroups = () => {
     const dateKey = currentDay.toISOString().split('T')[0];
     const sortedTasks = groupedTasks[dateKey] || [];
 
+    const isToday = currentDay.toDateString() === today.toDateString(); // Check if it's today
+
     days.push(
-      <div className="todo-category" key={`tododay-${dateKey}`}>
+      <div className={`todo-category ${isToday ? 'today' : ''}`} key={`tododay-${dateKey}`}>
         <h4>{currentDay.toDateString()}</h4>
         {sortedTasks.length > 0 ? (
           sortedTasks.map((task) => (
@@ -109,6 +111,14 @@ const renderTaskGroups = () => {
   return days;
 };
 
+ const initialScroll = () => {
+  const todayElement = document.querySelector('.today');
+  console.log(todayElement);
+  if (todayElement) {
+  scrollContainerRef.current.scrollTop = todayElement.offsetTop;
+  
+  }
+ }
 
   // List of all upcoming tasks
   const renderUpcomingTasks = () => {
@@ -195,6 +205,8 @@ const renderTaskGroups = () => {
       <div className="scroll-container" ref={scrollContainerRef}>
         <div className="view-content grouped-view" onScroll={(e) => handleScrollTodoList(e, loading, setLoading, setDaysOffset, scrollContainerRef, 15)}>
           {renderTaskGroups()}
+          {console.log(document.querySelector('.today'))
+          }
         </div>
         <div className="view-content list-view">
           {renderUpcomingTasks()}
