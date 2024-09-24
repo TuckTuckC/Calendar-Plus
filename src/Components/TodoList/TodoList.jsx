@@ -13,7 +13,9 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const scrollContainerRef = useRef(null); // Reference to scroll container
   const [activeView, setActiveView] = useState('grouped'); // Track active view
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [daysOffset, setDaysOffset] = useState({ past: 15, future: 30 });
+  const scrollRef = useRef(null)
 
   const handleAddTodo = () => {
     if (inputValue.trim() && dueDate) {
@@ -72,53 +74,52 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   });
 
   // Grouped view rendering (Render 30 days ahead properly)
-// Grouped view rendering (Respond to dynamic daysOffset)
-const renderTaskGroups = () => {
-  let days = [];
-  const startDay = new Date(today);
-  startDay.setDate(today.getDate() - daysOffset.past); // Start days 15 before today
+  // Grouped view rendering (Respond to dynamic daysOffset)
+  const renderTaskGroups = () => {
+    let days = [];
+    const startDay = new Date(today);
+    startDay.setDate(today.getDate() - daysOffset.past); // Start days 15 before today
 
-  // Render the range based on daysOffset
-  for (let i = -daysOffset.past; i <= daysOffset.future; i++) {
-    const currentDay = new Date(startDay);
-    currentDay.setDate(startDay.getDate() + i);
-    currentDay.setHours(0, 0, 0, 0);
+    // Render the range based on daysOffset
+    for (let i = -daysOffset.past; i <= daysOffset.future; i++) {
+      const currentDay = new Date(startDay);
+      currentDay.setDate(startDay.getDate() + i);
+      currentDay.setHours(0, 0, 0, 0);
 
-    const dateKey = currentDay.toISOString().split('T')[0];
-    const sortedTasks = groupedTasks[dateKey] || [];
+      const dateKey = currentDay.toISOString().split('T')[0];
+      const sortedTasks = groupedTasks[dateKey] || [];
 
-    const isToday = currentDay.toDateString() === today.toDateString(); // Check if it's today
+      const isToday = currentDay.toDateString() === today.toDateString(); // Check if it's today
 
-    days.push(
-      <div className={`todo-category ${isToday ? 'today' : ''}`} key={`tododay-${dateKey}`}>
-        <h4>{currentDay.toDateString()}</h4>
-        {sortedTasks.length > 0 ? (
-          sortedTasks.map((task) => (
-            <TodoItem
-              task={task}
-              view={'day'}
-              key={`todo-${task.id}`}
-              setModalItem={setModalItem}
-              setModalVisibility={setModalVisibility}
-            />
-          ))
-        ) : (
-          <p>No tasks for this day</p>
-        )}
-      </div>
-    );
+      days.push(
+        <div className={`todo-category ${isToday ? 'today' : ''}`} ref={isToday ? scrollRef : null} key={`tododay-${dateKey}`}>
+          <h4>{currentDay.toDateString()}</h4>
+          {sortedTasks.length > 0 ? (
+            sortedTasks.map((task) => (
+              <TodoItem
+                task={task}
+                view={'day'}
+                key={`todo-${task.id}`}
+                setModalItem={setModalItem}
+                setModalVisibility={setModalVisibility}
+              />
+            ))
+          ) : (
+            <p>No tasks for this day</p>
+          )}
+        </div>
+      );
+    }
+    return days;
+  };
+
+  const initialScroll = (today) => {
+    if (today) {
+      console.log('Today: ', today);
+      scrollContainerRef.current.scrollTop = today.offsetTop;
+
+    }
   }
-  return days;
-};
-
- const initialScroll = () => {
-  const todayElement = document.querySelector('.today');
-  console.log(todayElement);
-  if (todayElement) {
-  scrollContainerRef.current.scrollTop = todayElement.offsetTop;
-  
-  }
- }
 
   // List of all upcoming tasks
   const renderUpcomingTasks = () => {
@@ -146,14 +147,13 @@ const renderTaskGroups = () => {
   };
 
   useEffect(() => {
-    if (scrollContainerRef.current) {
-      const todayElement = document.querySelector('.today');
-      if (todayElement) {
-        scrollContainerRef.current.scrollTop = todayElement.offsetTop;
-      }
+    if (scrollRef.current) {
+      console.log(scrollRef.current);
+
+      scrollRef.current.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
   }, []);
-  
+
 
   return (
     <div className="todo-container">
@@ -207,6 +207,16 @@ const renderTaskGroups = () => {
           {renderTaskGroups()}
           {console.log(document.querySelector('.today'))
           }
+          <button
+            className="scroll-to-today-btn"
+            onClick={() => {scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            console.log(scrollRef)}
+            
+          }
+          >
+            Back to Today
+          </button>
+
         </div>
         <div className="view-content list-view">
           {renderUpcomingTasks()}

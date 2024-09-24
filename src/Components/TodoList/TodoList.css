@@ -94,6 +94,7 @@
 /* Styles for the grouped and list views */
 .grouped-view {
     background-color: #f0f8ff;
+    scrollbar-width: none;
 }
 
 .list-view {
@@ -168,3 +169,22 @@
     transform: scale(1.05); /* Slightly enlarge the button on hover */
     transition: filter 0.3s ease, transform 0.3s ease;
 }
+
+.scroll-to-today-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .scroll-to-today-btn:hover {
+    background-color: #0056b3;
+  }
+  
