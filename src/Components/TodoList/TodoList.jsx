@@ -13,7 +13,6 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const scrollContainerRef = useRef(null); // Reference to scroll container
   const [activeView, setActiveView] = useState('grouped'); // Track active view
   const [loading, setLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [daysOffset, setDaysOffset] = useState({ past: 15, future: 30 });
   const scrollRef = useRef(null)
 
@@ -55,7 +54,6 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const today = new Date();
 
   todoList.forEach((task) => {
-    const taskDate = new Date(task.dueDate);
     for (let i = 0; i <= daysAhead; i++) {
       const currentDay = new Date(today);
       currentDay.setDate(today.getDate() + i);
