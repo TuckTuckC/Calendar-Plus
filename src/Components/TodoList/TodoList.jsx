@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './TodoList.css';
 import TodoItem from '../TodoItem/TodoItem';
+import AddTodoModal from '../TodoItem/AddTodoModal';
 import { v4 as uuidv4 } from 'uuid';
 import { handleScrollTodoList } from '../../hooks/controllers';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
 
-const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) => {
+const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalVisibility }) => {
   const [inputValue, setInputValue] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
@@ -16,8 +17,12 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   const [daysOffset, setDaysOffset] = useState({ past: 15, future: 30 });
   const scrollRef = useRef(null)
 
+  const [addModalVisibility, setAddModalVisibility] = useState(false);
+
   const handleAddTodo = () => {
+    
     if (inputValue.trim() && dueDate) {
+      console.log('HERE');
       let dueDateTime;
       const [dueYear, dueMonth, dueDay] = dueDate.split('-').map(Number);
 
@@ -40,6 +45,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
         dueTime: dueTime,
         repeat: repeatOption,
       };
+      
 
       setTodoList([...todoList, newTask]);
       setInputValue('');
@@ -156,7 +162,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
   return (
     <div className="todo-container">
       {/* Sticky input bar */}
-      <div className="todo-input sticky-input">
+      {isMobileView === false ? <div className="todo-input sticky-input">
         <input
           type="text"
           value={inputValue}
@@ -181,7 +187,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
           <option value="yearly">Every year</option>
         </select>
         <button onClick={handleAddTodo}>Add</button>
-      </div>
+      </div> : ''}
 
       {/* View toggler with active view tracking */}
       <div className={`view-toggle ${activeView === 'list' ? 'active-list' : ''}`}>
@@ -205,21 +211,22 @@ const TodoList = ({ todoList, setTodoList, setModalItem, setModalVisibility }) =
           {renderTaskGroups()}
           {console.log(document.querySelector('.today'))
           }
-          <button
-            className="scroll-to-today-btn"
-            onClick={() => {scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            console.log(scrollRef)}
-            
-          }
-          >
-            Back to Today
-          </button>
+            <div className="buttons">
+    <button 
+      className="btn scroll-to-today-btn" 
+      onClick={() => scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+      Back to Today
+    </button>
+    {isMobileView && <button onClick={() => setAddModalVisibility(true)} className="btn add-task-btn">Add Task</button>}
+  </div>
+
 
         </div>
         <div className="view-content list-view">
           {renderUpcomingTasks()}
         </div>
       </div>
+      <AddTodoModal addModalVisibility={addModalVisibility} setAddModalVisibility={setAddModalVisibility} setDueDate={setDueDate} setDueTime={setDueTime} handleAddTodo={handleAddTodo} inputValue={inputValue} setInputValue={setInputValue} />
     </div>
   );
 };

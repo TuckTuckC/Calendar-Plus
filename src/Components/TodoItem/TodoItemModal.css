@@ -3,32 +3,36 @@
 /* Keyframes for pop-in animation */
 @keyframes popIn {
     0% {
-      transform: scale(0);
-      opacity: 0;
+        transform: scale(0);
+        opacity: 0;
     }
+
     80% {
-      transform: scale(1.1);
-      opacity: 1;
+        transform: scale(1.1);
+        opacity: 1;
     }
+
     100% {
-      transform: scale(1);
-      opacity: 1;
+        transform: scale(1);
+        opacity: 1;
     }
-  }
-  
-  /* Keyframes for pop-out animation */
-  @keyframes popOut {
+}
+
+/* Keyframes for pop-out animation */
+@keyframes popOut {
     0% {
-      transform: scale(1);
-      opacity: 1;
+        transform: scale(1);
+        opacity: 1;
     }
+
     80% {
-      transform: scale(1.1);
-      opacity: 0.7;
+        transform: scale(1.1);
+        opacity: 0.7;
     }
+
     100% {
-      transform: scale(0);
-      opacity: 0;
+        transform: scale(0);
+        opacity: 0;
     }
 }
 
@@ -36,7 +40,10 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
     width: 100%;
     max-width: 50vw;
     height: auto;
@@ -47,20 +54,34 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     overflow-y: auto;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards; /* Ensures it keeps the final state */
-    opacity: 0; /* Ensure the modal is hidden by default */
+    animation-fill-mode: forwards;
+    opacity: 0;
+    visibility: hidden; /* Hide the modal by default */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
 /* Exit Button */
 /* Add the pop-in animation */
+/* Modal is visible */
 .modal-visible {
-    animation-name: popIn;
+    display: flex;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    visibility: visible;
+    animation: popIn 0.5s ease forwards;
 }
 
-/* Add the pop-out animation */
+/* Modal is hidden */
 .modal-hidden {
-    animation-name: popOut;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    visibility: hidden;
+    animation: popOut 0.5s ease forwards;
+}
+
+/* Add this for the smooth appearance/disappearance */
+.animate {
+    transition: all 0.3s ease-in-out;
 }
 
 /* Exit Button */
@@ -111,7 +132,8 @@
 }
 
 .itemModal input:focus {
-    border-color: #007bff; /* Highlight the border on focus */
+    border-color: #007bff;
+    /* Highlight the border on focus */
 }
 
 /* Save button */
@@ -157,7 +179,8 @@
     padding: 10px;
     margin-top: 5px;
     max-height: 150px;
-    overflow-y: auto; /* Scrollable dropdown content */
+    overflow-y: auto;
+    /* Scrollable dropdown content */
 }
 
 .dropdown-content li {
@@ -175,7 +198,8 @@
 @media (max-width: 768px) {
     .itemModal {
         width: 90%;
-        max-width: 90%; /* Adjust modal width for mobile screens */
+        max-width: 90%;
+        /* Adjust modal width for mobile screens */
         height: auto;
         max-height: 90vh;
         padding: 15px;
@@ -185,7 +209,8 @@
         padding: 10px;
     }
 
-    .dropdown-btn, .itemModal input {
+    .dropdown-btn,
+    .itemModal input {
         padding: 8px;
     }
 }
