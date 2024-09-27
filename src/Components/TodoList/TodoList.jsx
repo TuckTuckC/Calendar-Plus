@@ -226,7 +226,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
           {renderUpcomingTasks()}
         </div>
       </div>
-      <AddTodoModal addModalVisibility={addModalVisibility} setAddModalVisibility={setAddModalVisibility} setDueDate={setDueDate} setDueTime={setDueTime} handleAddTodo={handleAddTodo} inputValue={inputValue} setInputValue={setInputValue} />
+      <AddTodoModal addModalVisibility={addModalVisibility} setAddModalVisibility={setAddModalVisibility} setDueDate={setDueDate} setDueTime={setDueTime} handleAddTodo={handleAddTodo} inputValue={inputValue} setInputValue={setInputValue} repeatOption={repeatOption} setRepeatOption={setRepeatOption} />
     </div>
   );
 };

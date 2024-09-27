@@ -1,110 +1,115 @@
 .calendar-container {
-  align-items: center;
-  justify-content: center;
-  overflow-y: scroll; /* Ensure scrolling is enabled */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .calendar-container::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, and Opera */
+    display: none;
+    /* Chrome, Safari, and Opera */
 }
 
 .calendar {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #fff;
 }
 
 .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 days in a week */
-  gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    /* 7 days in a week */
+    gap: 10px;
 }
 
 .calendar-day {
-  background-color: #f4f4f4;
-  padding: 10px;
-  border-radius: 8px;
-  width: 120px;  /* Set fixed width */
-  height: 120px; /* Set fixed height */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
-}
-
-/* Hover effect */
-.calendar-day:hover {
-  background-color: #ececec;
-}
-
-/* Dragging over */
-.calendar-day.dragging-over {
-  transform: scale(1.05);
-  /* Slight increase in size */
-  background-color: #e0f7fa;
-}
-
-/* Other CSS remains the same */
-.day-number {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.tasks-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.task-item {
-  background-color: #dff7ff;
-  padding: 5px;
-  border-radius: 3px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-}
-
-.calendar-month {
-  margin-top: 30px;
-  width: 100%;
-}
-
-.scroll-button {
-  position: fixed;
-  bottom: 10px;
-  right: 43%;
-  z-index: 999;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.scroll-button:hover {
-  background-color: #0056b3;
-}
-
-@media screen and (max-width: 768px) {
-  .calendar-day {
     background-color: #f4f4f4;
     padding: 10px;
     border-radius: 8px;
-    width: auto;  /* Set fixed width */
-    height: 20vw; /* Set fixed height */
+    height: 7vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: center;
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
-  }
+    overflow-y: scroll;
+    transition: background-color 0.3s, transform 0.3s;
+    /* Smooth transition */
+}
 
-  .calendar-day > .tasks-container > .todo-item {
-    max-width: fit-content;
-  }
+.calendar-day::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, and Opera */
+}
+
+.calendar-day:hover {
+    background-color: #ececec;
+}
+
+.day-number {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-item {
+    background-color: #dff7ff;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+}
+
+.calendar-month {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.scroll-button {
+    position: fixed;
+    bottom: 10px;
+    right: 43%;
+    z-index: 999;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.scroll-button:hover {
+    background-color: #0056b3;
+}
+
+@media screen and (max-width: 768px) {
+    .calendar-day {
+        background-color: #f4f4f4;
+        padding: 1vw 0;
+        border-radius: 8px;
+        width: 11.5vw;
+        height: 20vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: center;
+        overflow-y: scroll;
+        transition: background-color 0.3s, transform 0.3s;
+        /* Smooth transition */
+    }
+
+    .calendar-day>.tasks-container>.todo-item {
+        padding: 0 1vw;
+        width: 100%;
+        font-size: 1.3vh;
+    }
 }

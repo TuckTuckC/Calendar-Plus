@@ -36,21 +36,29 @@
     }
 }
 
+/* Empty container that takes the size of the full screen to center the modal */
+.modal-container {
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100svw;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+/* AddTask, and EditTask Modal */
 .itemModal {
     display: flex;
     flex-direction: column;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 4;
-    width: 100%;
-    max-width: 50vw;
+    z-index: 3;
+    width: 50%;
     height: auto;
     max-height: 80vh;
     background-color: white;
     border-radius: 12px;
-    box-sizing: border-box;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
     overflow-y: auto;
@@ -60,11 +68,8 @@
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
-/* Exit Button */
-/* Add the pop-in animation */
 /* Modal is visible */
 .modal-visible {
-    display: flex;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
     visibility: visible;
@@ -79,7 +84,7 @@
     animation: popOut 0.5s ease forwards;
 }
 
-/* Add this for the smooth appearance/disappearance */
+/* appearance/disappearance animation */
 .animate {
     transition: all 0.3s ease-in-out;
 }
@@ -198,8 +203,6 @@
 @media (max-width: 768px) {
     .itemModal {
         width: 90%;
-        max-width: 90%;
-        /* Adjust modal width for mobile screens */
         height: auto;
         max-height: 90vh;
         padding: 15px;

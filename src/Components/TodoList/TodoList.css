@@ -21,7 +21,6 @@
 
 .todo-input {
     display: flex;
-    margin-bottom: 20px;
     gap: 10px;
 }
 
@@ -49,25 +48,33 @@
 }
 
 .view-toggle {
+    position: relative;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    justify-content: flex-start;
+    margin: 0.9rem 0;
+    width: 100%;
+    border-radius: 10px;
 }
 
 .view-toggle button {
-    padding: 10px 20px;
+    position: relative;
+    z-index: 2; /* Ensure buttons are on top of the sliding glass */
     width: 50%;
-    height: 10vh;
-    background-color: #6c757d;
-    color: white;
+    /* height: 10vh; */
+    padding: 0.8rem 0;
+    background-color: transparent; /* No background color; the sliding effect will handle this */
+    color: #333;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .view-toggle button:hover {
-    /* background-color: #cacaca; */
+    /* filter: brightness(1.2) saturate(1.5); */
     color: #333;
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+    transition: filter 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
 }
 
 /* Scroll container for side-by-side views */
@@ -79,7 +86,6 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     box-sizing: border-box;
-    height: 100%; /* Set the height of the container */
 }
 
 /* Each view takes up 100% of the parent container width */
@@ -112,30 +118,9 @@
 
 /* View toggle buttons */
 /* Container for view toggle buttons */
-.view-toggle {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    height: 50px;
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden; /* Ensure the sliding effect stays within the bounds */
-}
 
 /* Common styles for both buttons */
-.view-toggle button {
-    position: relative;
-    z-index: 2; /* Ensure buttons are on top of the sliding glass */
-    width: 50%;
-    height: 100%;
-    padding: 0;
-    background-color: transparent; /* No background color; the sliding effect will handle this */
-    color: #333;
-    border: none;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
+
 
 /* Active button */
 .view-toggle button.active {
@@ -161,14 +146,6 @@
 .view-toggle.active-list::before {
     left: 50%;
     background-color: #e6fff2; /* Color for Task List View */
-}
-
-/* Additional styles to make sure the buttons still look clickable */
-.view-toggle button:hover {
-    /* filter: brightness(1.2) saturate(1.5); */
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
-    transition: filter 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
 }
 
 .buttons {
@@ -200,7 +177,5 @@
   }
   
   @media (max-width: 768px) {
-    .view-toggle {
-        margin-top: 70px;
-    }
+
 }

@@ -10,7 +10,7 @@ const App = () => {
   const [todoList, setTodoList] = useLocalStorage('todoList', []);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [modalItem, setModalItem] = useState();
-  
+
   const [isMobileView, setIsMobileView] = useState(false); // State to toggle views on mobile
   const [showCalendar, setShowCalendar] = useState(true); // Initially show the calendar in mobile view
 
@@ -41,35 +41,36 @@ const App = () => {
           {showCalendar ? 'Show Todo List' : 'Show Calendar'}
         </button>
       ) : ''}
-      
-      {/* Conditionally render calendar and todo list based on mobile view */}
-      {(showCalendar || !isMobileView) && (
-        <Calendar
-          todoList={todoList}
-          setModalItem={setModalItem}
-          setModalVisibility={setModalVisibility}
-        />
-      )}
+      <div className='view-container'>
+        {/* Conditionally render calendar and todo list based on mobile view */}
+        {(showCalendar || !isMobileView) && (
+          <Calendar
+            todoList={todoList}
+            setModalItem={setModalItem}
+            setModalVisibility={setModalVisibility}
+          />
+        )}
 
-      {(!showCalendar || !isMobileView) && (
-        <TodoList
-        isMobileView={isMobileView}
-          todoList={todoList}
-          setTodoList={setTodoList}
-          setModalItem={setModalItem}
-          setModalVisibility={setModalVisibility}
-        />
-      )}
-      
-      {todoList.length > 0 && (
-        <TodoItemModal
-          modalVisibility={modalVisibility}
-          todoList={todoList}
-          setTodoList={setTodoList}
-          setModalVisibility={setModalVisibility}
-          task={modalItem}
-        />
-      )}
+        {(!showCalendar || !isMobileView) && (
+          <TodoList
+            isMobileView={isMobileView}
+            todoList={todoList}
+            setTodoList={setTodoList}
+            setModalItem={setModalItem}
+            setModalVisibility={setModalVisibility}
+          />
+        )}
+
+        {todoList.length > 0 && (
+          <TodoItemModal
+            modalVisibility={modalVisibility}
+            todoList={todoList}
+            setTodoList={setTodoList}
+            setModalVisibility={setModalVisibility}
+            task={modalItem}
+          />
+        )}
+      </div>
     </div>
   );
 };

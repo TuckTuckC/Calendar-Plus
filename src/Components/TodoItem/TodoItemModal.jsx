@@ -102,55 +102,57 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
     };
 
     return (
-        <div
-            className={`itemModal ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
-            style={{ display: isVisible ? 'flex' : 'none' }} // Ensures modal is removed after hide animation
-        >
-            <button className='exitBtn' onClick={() => setModalVisibility(false)}>X</button>
-            <h2>Edit Task</h2>
+        <div className={`modal-container ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
+        style={{ display: isVisible ? 'flex' : 'none' }}>
+            <div
+                className={`itemModal ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
+            >
+                <button className='exitBtn' onClick={() => setModalVisibility(false)}>X</button>
+                <h2>Edit Task</h2>
 
-            <label htmlFor="taskName">Task Name</label>
-            <input
-                type="text"
-                id="taskName"
-                value={taskName}
-                onChange={(e) => setTaskName(e.target.value)}
-                placeholder="Enter task name"
-            />
+                <label htmlFor="taskName">Task Name</label>
+                <input
+                    type="text"
+                    id="taskName"
+                    value={taskName}
+                    onChange={(e) => setTaskName(e.target.value)}
+                    placeholder="Enter task name"
+                />
 
-            <label htmlFor="dueDate">Due Date</label>
-            <input
-                type="date"
-                id="dueDate"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-            />
+                <label htmlFor="dueDate">Due Date</label>
+                <input
+                    type="date"
+                    id="dueDate"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                />
 
-            <label htmlFor="dueTime">Due Time</label>
-            <input
-                type="time"
-                id="dueTime"
-                value={dueTime}
-                onChange={(e) => setDueTime(e.target.value)}
-            />
+                <label htmlFor="dueTime">Due Time</label>
+                <input
+                    type="time"
+                    id="dueTime"
+                    value={dueTime}
+                    onChange={(e) => setDueTime(e.target.value)}
+                />
 
-            {/* Conditionally render the "Later Dates" button if the task repeats */}
-            {task.repeat !== 'none' && (
-                <div className="dropdown">
-                    <button className="dropdown-btn" onClick={handleToggleDates}>
-                        {showDates ? 'Hide Later Dates' : 'Show Later Dates'}
-                    </button>
-                    {showDates && (
-                        <ul className="dropdown-content">
-                            {futureDueDates.map((date, index) => (
-                                <li key={index}>{new Date(date).toLocaleDateString()}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            )}
+                {/* Conditionally render the "Later Dates" button if the task repeats */}
+                {task.repeat !== 'none' && (
+                    <div className="dropdown">
+                        <button className="dropdown-btn" onClick={handleToggleDates}>
+                            {showDates ? 'Hide Later Dates' : 'Show Later Dates'}
+                        </button>
+                        {showDates && (
+                            <ul className="dropdown-content">
+                                {futureDueDates.map((date, index) => (
+                                    <li key={index}>{new Date(date).toLocaleDateString()}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
 
-            <button className="save-btn" onClick={handleSave}>Save</button>
+                <button className="save-btn" onClick={handleSave}>Save</button>
+            </div>
         </div>
     );
 }
