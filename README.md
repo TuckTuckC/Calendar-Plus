@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+# Calendar +
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to **Calendar +**, the sleek and powerful task management app designed to help you stay on top of your day-to-day activities effortlessly. This app combines an intuitive interface with a smooth experience for managing tasks, schedules, and events.
 
-## Available Scripts
+![App Screenshot](./screenshot.png)
 
-In the project directory, you can run:
+## 🎯 Table of Contents
 
-### `npm start`
+- [Watch the Demo Video](#-watch-the-demo-video)
+- [Features](#-features)
+- [Installation](#-installation)
+- [Contributing](#-contributing)
+- [Built With](#-built-with)
+- [License](#-license)
+- [Why Calendar +?](#-why-calendar-)
+- [Contact](#-contact)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🎥 Watch the Demo Video
+Click the link below to check out the full demonstration of Calendar + on YouTube:
 
-### `npm test`
+[Watch on YouTube](https://www.youtube.com/watch?v=your_video_link)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/your_video_link" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📋 Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🗓 Simple Task Creation
+- **Add tasks** effortlessly with a single tap, assigning due dates with or without specific times.
+- Option for **all-day tasks** and tasks without repeat or time constraints.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 🔁 Repeatable Tasks
+- Set up **recurring tasks** that repeat daily, weekly, or at custom intervals.
+- Visualize repeating tasks on both the **task list view** and the **calendar view**.
 
-### `npm run eject`
+### 📅 Calendar & Task Views
+- Switch seamlessly between **grouped view** and **task list view**.
+- **Infinite scrolling** in both task and calendar views, allowing you to browse past and future tasks without limits.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### ⏳ Navigation Tools
+- Jump back to the **current day** or **current month** with one tap.
+- Scroll within individual days on the calendar if there are too many tasks.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 📝 Task Editing & Management
+- Edit tasks easily by clicking on them and updating details like **start date** or **recurrence**.
+- Quickly delete tasks when they’re no longer needed.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 💻 Installation
 
-## Learn More
+1. Clone the repository:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    ```bash
+    git clone https://github.com/YourGitHubProfile/calendar-plus.git
+    ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Navigate to the project directory:
 
-### Code Splitting
+    ```bash
+    cd calendar-plus
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. Install dependencies:
 
-### Analyzing the Bundle Size
+    ```bash
+    npm install
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. Start the development server:
 
-### Making a Progressive Web App
+    ```bash
+    npm start
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Your app should now be running on `http://localhost:3000`.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🤝 Contributing
 
-### Deployment
+Contributions are welcome! Here's how you can contribute:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. Fork the repository.
+2. Create a new feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some amazing feature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a pull request.
 
-### `npm run build` fails to minify
+### Code of Conduct
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) in all your interactions with the project.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 🛠️ Built With
+
+- **React** - Frontend framework for building dynamic UI.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+---
+
+## ✨ Why Calendar +?
+
+**Calendar +** is built for people who want **simplicity with power**. Whether you're scheduling an appointment or setting up a recurring task, this app makes it easy to manage your life with minimal effort. It’s packed with features that give you full control of your day while keeping the interface sleek and intuitive.
+
+---
+
+## 📲 Contact
+
+Follow me for more projects and updates:
+
+- GitHub: [Your GitHub Profile](https://github.com/TuckTuckC)

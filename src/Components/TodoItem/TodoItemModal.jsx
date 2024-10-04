@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { updateTask } from '../../hooks/controllers';
 import './TodoItemModal.css';
 
-function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, setTodoList }) {
+function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, setTodoList, handleDeleteTodo }) {
     const [showDates, setShowDates] = useState(false);
     const [taskName, setTaskName] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [dueTime, setDueTime] = useState('');
     const [isVisible, setIsVisible] = useState(false); // Control visibility for animation
+    const [repeatOption, setRepeatOption] = useState('');
 
     useEffect(() => {
         if (task) {
-            // Update the state when the task changes
             setTaskName(task?.task || '');
-            setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substring(0, 10) : '');
+            
+            // Convert to local date string without time zone shift
+            const localDate = new Date(task.dueDate);
+            localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset()); // Correct time zone offset
+            setDueDate(localDate.toISOString().substring(0, 10));
+            
             setDueTime(task?.dueTime || ''); // Use the dueTime field directly
+            setRepeatOption(task?.repeat || '');
         }
-    }, [task]); // Re-run the effect whenever `task` changes
+    }, [task]);
+     // Re-run the effect whenever `task` changes
 
     useEffect(() => {
         if (modalVisibility) {
@@ -54,6 +61,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
             ...task,
             task: taskName,
             dueDate: dueDateTime,
+            repeat: repeatOption,
             dueTime: dueTime ? dueTime : null, // Ensure dueTime is stored, or set to null if empty
         };
 
@@ -72,7 +80,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
 
         while (dueDate <= threeMonthsFromNow) {
             if (dueDate >= currentDate) {
-                futureDates.push(new Date(dueDate)); 
+                futureDates.push(new Date(dueDate));
             }
 
             switch (task.repeat) {
@@ -103,7 +111,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
 
     return (
         <div className={`modal-container ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
-        style={{ display: isVisible ? 'flex' : 'none' }}>
+            style={{ display: isVisible ? 'flex' : 'none' }}>
             <div
                 className={`itemModal ${modalVisibility ? 'modal-visible' : 'modal-hidden'}`}
             >
@@ -135,6 +143,15 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
                     onChange={(e) => setDueTime(e.target.value)}
                 />
 
+                <select value={repeatOption} onChange={(e) => setRepeatOption(e.target.value)}>
+                    <option value="none">Does not repeat</option>
+                    <option value="daily">Every day</option>
+                    <option value="weekly">Every week</option>
+                    <option value="monthly">Every month</option>
+                    <option value="yearly">Every year</option>
+                </select>
+
+
                 {/* Conditionally render the "Later Dates" button if the task repeats */}
                 {task.repeat !== 'none' && (
                     <div className="dropdown">
@@ -152,6 +169,7 @@ function TodoItemModal({ modalVisibility, task, setModalVisibility, todoList, se
                 )}
 
                 <button className="save-btn" onClick={handleSave}>Save</button>
+                <button className="delete-btn" onClick={() => handleDeleteTodo(task.id)}>DELETE</button>
             </div>
         </div>
     );

@@ -18,6 +18,12 @@ const App = () => {
     setShowCalendar(!showCalendar); // Toggle between calendar and todo list
   };
 
+  const handleDeleteTodo = (id) => {
+    const updatedTodoList = todoList.filter((task) => task.id !== id);
+    setTodoList(updatedTodoList);
+    setModalVisibility(false);
+  };
+
   // Handle screen resize to detect if it's mobile view
   React.useEffect(() => {
     const handleResize = () => {
@@ -68,6 +74,7 @@ const App = () => {
             setTodoList={setTodoList}
             setModalVisibility={setModalVisibility}
             task={modalItem}
+            handleDeleteTodo={handleDeleteTodo}
           />
         )}
       </div>
