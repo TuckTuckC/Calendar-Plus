@@ -148,6 +148,10 @@
     background-color: #e6fff2; /* Color for Task List View */
 }
 
+.today {
+    background-color: #fffae3;
+}
+
 .buttons {
     display: flex;
     position: absolute;

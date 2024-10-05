@@ -20,7 +20,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
   const [addModalVisibility, setAddModalVisibility] = useState(false);
 
   const handleAddTodo = () => {
-    
+
     if (inputValue.trim() && dueDate) {
       console.log('HERE');
       let dueDateTime;
@@ -45,7 +45,7 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
         dueTime: dueTime,
         repeat: repeatOption,
       };
-      
+
 
       setTodoList([...todoList, newTask]);
       setInputValue('');
@@ -93,7 +93,11 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
       const dateKey = currentDay.toISOString().split('T')[0];
       const sortedTasks = groupedTasks[dateKey] || [];
 
-      const isToday = currentDay.toDateString() === today.toDateString(); // Check if it's today
+      const isToday =
+        currentDay.getFullYear() === today.getFullYear() &&
+        currentDay.getMonth() === today.getMonth() &&
+        currentDay.getDate() === today.getDate();
+
 
       days.push(
         <div className={`todo-category ${isToday ? 'today' : ''}`} ref={isToday ? scrollRef : null} key={`tododay-${dateKey}`}>
@@ -151,12 +155,32 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
   };
 
   useEffect(() => {
-    if (scrollRef.current) {
-      console.log(scrollRef.current);
-
-      scrollRef.current.scrollIntoView({ behavior: 'instant', block: 'start' })
+    const checkTodayElement = () => {
+      const todayElement = document.querySelector('.today');
+      if (todayElement) {
+        scrollRef.current = todayElement;
+        scrollRef.current.scrollIntoView({ behavior: 'instant', block: 'start' })
+      }
+    };
+  
+    // Run the check when the component first loads
+    checkTodayElement();
+  
+    // Also check after loading new days in the list
+    const observer = new MutationObserver(checkTodayElement);
+    if (scrollContainerRef.current) {
+      observer.observe(scrollContainerRef.current, {
+        childList: true,
+        subtree: true,
+      });
     }
-  }, []);
+  
+    return () => {
+      if (scrollContainerRef.current) {
+        observer.disconnect();
+      }
+    };
+  }, [loading, daysOffset]);
 
 
   return (
@@ -211,14 +235,14 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
           {renderTaskGroups()}
           {console.log(document.querySelector('.today'))
           }
-            <div className="buttons">
-    <button 
-      className="btn scroll-to-today-btn" 
-      onClick={() => scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
-      Back to Today
-    </button>
-    {isMobileView && <button onClick={() => setAddModalVisibility(true)} className="btn add-task-btn">Add Task</button>}
-  </div>
+          <div className="buttons">
+            <button
+              className="btn scroll-to-today-btn"
+              onClick={() => scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+              Back to Today
+            </button>
+            {isMobileView && <button onClick={() => setAddModalVisibility(true)} className="btn add-task-btn">Add Task</button>}
+          </div>
 
 
         </div>

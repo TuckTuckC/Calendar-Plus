@@ -5,7 +5,9 @@ import TodoItem from '../TodoItem/TodoItem';
 const Day = ({ currentDay, tasksForDay, setModalItem, setModalVisibility, onTaskDrop }) => {
 
   return (
-    <div className="calendar-day">
+    <div className={currentDay.getFullYear() === new Date().getFullYear() &&
+      currentDay.getMonth() === new Date().getMonth() &&
+      currentDay.getDate() === new Date().getDate() ? 'todayCal calendar-day' : 'calendar-day'}>
       <div className="day-number">{currentDay.getDate()}</div>
       <div className="tasks-container">
         {tasksForDay.length > 0 ? (

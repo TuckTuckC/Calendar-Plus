@@ -91,6 +91,10 @@
     background-color: #0056b3;
 }
 
+.todayCal {
+    background-color: #fffae3;
+}
+
 @media screen and (max-width: 768px) {
     .calendar-day {
         background-color: #f4f4f4;
