@@ -1,3 +1,4 @@
+// The days use this function to see if they should render the current task on the date or not
 export const shouldRenderTaskOnDate = (task, currentDay) => {
     const taskDate = new Date(task.dueDate);
   
@@ -24,7 +25,7 @@ export const shouldRenderTaskOnDate = (task, currentDay) => {
     return false;
 };
   
-
+// Updates task data
 export const updateTask = (taskList, updatedTask) => {
 // Find the index of the task being updated
 const taskIndex = taskList.findIndex(task => task.id === updatedTask.id);
@@ -40,6 +41,7 @@ if (taskIndex !== -1) {
 return taskList;
 };
 
+// Loading months dynamically with scrolling
 export const handleScroll = (e, loading, setLoading, setOffsets, containerRef, offsetUnit = 15) => {
   const { scrollTop, scrollHeight, clientHeight } = e.target;
 
@@ -78,6 +80,7 @@ export const handleScroll = (e, loading, setLoading, setOffsets, containerRef, o
   }
 };
 
+// Loading days dynamically with scrolling
 export const handleScrollTodoList = (e, loading, setLoading, setDaysOffset, scrollContainerRef, increment) => {
   const { scrollTop, scrollHeight, clientHeight } = e.target;
 

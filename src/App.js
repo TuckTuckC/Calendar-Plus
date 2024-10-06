@@ -3,7 +3,6 @@ import Calendar from './Components/Calendar/Calendar.jsx';
 import TodoList from './Components/TodoList/TodoList.jsx';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import TodoItemModal from './Components/TodoItem/TodoItemModal.jsx';
-import addTodoModal from './Components/TodoItem/AddTodoModal.jsx';
 import './App.css';
 
 const App = () => {
@@ -14,10 +13,12 @@ const App = () => {
   const [isMobileView, setIsMobileView] = useState(false); // State to toggle views on mobile
   const [showCalendar, setShowCalendar] = useState(true); // Initially show the calendar in mobile view
 
+  // Toggle between calendar and todo list
   const handleToggleView = () => {
-    setShowCalendar(!showCalendar); // Toggle between calendar and todo list
+    setShowCalendar(!showCalendar);
   };
 
+  // Deletes Tasks
   const handleDeleteTodo = (id) => {
     const updatedTodoList = todoList.filter((task) => task.id !== id);
     setTodoList(updatedTodoList);
