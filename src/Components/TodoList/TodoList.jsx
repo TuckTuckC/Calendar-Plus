@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { handleScrollTodoList } from '../../hooks/controllers';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
 
-const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalVisibility }) => {
+const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalVisibility }) => { 
   const [inputValue, setInputValue] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
