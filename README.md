@@ -116,4 +116,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 Follow me for more projects and updates:
 
-- GitHub: [Your GitHub Profile](https://github.com/TuckTuckC)![alt text](image.png)
+- GitHub: [Your GitHub Profile](https://github.com/TuckTuckC)
