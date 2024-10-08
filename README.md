@@ -2,7 +2,8 @@
 
 Welcome to **Calendar +**, the sleek and powerful task management app designed to help you stay on top of your day-to-day activities effortlessly. This app combines an intuitive interface with a smooth experience for managing tasks, schedules, and events.
 
-![App Screenshot](./screenshot.png)
+<img src="./src/image.png" alt="App Screenshot" height="400"/>
+
 
 ## 🎯 Table of Contents
 
@@ -21,8 +22,6 @@ Welcome to **Calendar +**, the sleek and powerful task management app designed t
 Click the link below to check out the full demonstration of Calendar + on YouTube:
 
 [Watch on YouTube](https://www.youtube.com/watch?v=xInQKBBaXbo)
-
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=xInQKBBaXbo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 
@@ -117,4 +116,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 Follow me for more projects and updates:
 
-- GitHub: [Your GitHub Profile](https://github.com/TuckTuckC)
+- GitHub: [Your GitHub Profile](https://github.com/TuckTuckC)![alt text](image.png)

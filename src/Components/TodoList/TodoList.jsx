@@ -121,14 +121,6 @@ const TodoList = ({ todoList, setTodoList, setModalItem, isMobileView, setModalV
     return days;
   };
 
-  const initialScroll = (today) => {
-    if (today) {
-      console.log('Today: ', today);
-      scrollContainerRef.current.scrollTop = today.offsetTop;
-
-    }
-  }
-
   // List of all upcoming tasks
   const renderUpcomingTasks = () => {
     const sortedTasks = [...todoList].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
