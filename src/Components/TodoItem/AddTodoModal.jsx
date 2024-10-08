@@ -3,7 +3,6 @@ import './TodoItemModal.css'
 
 function AddTodoModal({ addModalVisibility, setAddModalVisibility, setDueDate, setDueTime, handleAddTodo, setInputValue, repeatOption, setRepeatOption }) {
 
-    const [taskName, setTaskName] = useState('');
     const [isVisible, setIsVisible] = useState(false); // Control visibility for animation
 
     console.log(isVisible);

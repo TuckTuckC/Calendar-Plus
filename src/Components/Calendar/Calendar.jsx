@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { shouldRenderTaskOnDate } from '../../hooks/controllers';
-import TodoItem from '../TodoItem/TodoItem';
 import { handleScroll } from '../../hooks/controllers';
 import Day from './Day';
 import './Calendar.css';
@@ -85,7 +84,6 @@ const Calendar = ({ todoList, setModalItem, setModalVisibility }) => {
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDay = new Date(year, month, i);
       currentDay.setHours(0, 0, 0, 0);
-      const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
 
       const tasksForDay = todoList.filter((task) => shouldRenderTaskOnDate(task, currentDay));
 

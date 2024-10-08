@@ -3,8 +3,8 @@ import './TodoItem.css';
 
 function TodoItem({ view, task, setModalVisibility, setModalItem }) {
 
-  let repeat = view=='list' ? task.repeat: ''
-  repeat = repeat=='none' ? '' : repeat
+  let repeat = view==='list' ? task.repeat: ''
+  repeat = repeat==='none' ? '' : repeat
 
   const handleClick = () => {
     setModalItem(task);
@@ -20,7 +20,7 @@ function TodoItem({ view, task, setModalVisibility, setModalItem }) {
         minute: '2-digit',
         hour12: true,
       })}: ` : ''}
-      {task.task} {repeat!='' ? `(${repeat})` : ''}
+      {task.task} {repeat!=='' ? `(${repeat})` : ''}
     </div>
   );
 }

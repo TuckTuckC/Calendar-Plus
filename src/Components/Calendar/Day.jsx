@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDrop } from 'react-dnd';
 import TodoItem from '../TodoItem/TodoItem';
 
 const Day = ({ currentDay, tasksForDay, setModalItem, setModalVisibility, onTaskDrop }) => {
