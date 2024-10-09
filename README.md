@@ -2,7 +2,7 @@
 
 Welcome to **Calendar +**, the sleek and powerful task management app designed to help you stay on top of your day-to-day activities effortlessly. This app combines an intuitive interface with a smooth experience for managing tasks, schedules, and events.
 
-<img src="./src/image.png" alt="App Screenshot" height="400"/>
+<img src="./src/image.png" alt="App Screenshot" max-height="400"/>
 
 
 ## 🎯 Table of Contents
